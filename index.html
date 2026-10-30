@@ -127,6 +127,34 @@ h1 { font-family:"Source Serif", Georgia, serif; font-weight:600; font-size:40px
 .jour .s { font-size:11.5px; color:var(--texte-3); margin-top:4px; }
 .rang-txt { font-weight:600; white-space:nowrap; }
 
+.course-direct { margin:0 0 20px; border-radius:14px; background:linear-gradient(135deg, var(--marine), var(--marine-2)); color:var(--marine-texte); padding:18px 22px; box-shadow:var(--ombre); }
+.course-direct .cd-tag { display:inline-flex; align-items:center; gap:8px; font-size:11.5px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; padding:3px 10px; border-radius:999px; background:#ffffff1a; }
+.course-direct .cd-tag i { width:8px; height:8px; border-radius:50%; background:var(--critique); position:relative; }
+.course-direct .cd-tag i::after { content:""; position:absolute; inset:0; border-radius:50%; background:inherit; animation:pouls 1.2s ease-out infinite; }
+.course-direct .cd-tag.ok i { background:var(--bon); }
+.course-direct .cd-titre { font-family:"Source Serif", Georgia, serif; font-size:26px; font-weight:600; margin:10px 0 6px; }
+.course-direct .cd-barre { height:8px; border-radius:4px; background:#ffffff22; overflow:hidden; margin:10px 0 8px; }
+.course-direct .cd-barre span { display:block; height:100%; background:linear-gradient(90deg, #8fb8ee, #ffffff); border-radius:4px; transition:width 1s linear; }
+.course-direct .cd-sous { font-size:13px; opacity:.8; }
+.course-direct .cd-arrivee { display:flex; flex-wrap:wrap; gap:10px; margin:12px 0 8px; }
+.course-direct .cd-arrivee span { display:grid; place-items:center; min-width:52px; height:52px; padding:0 8px; border-radius:12px; background:#ffffff; color:var(--marine); font-size:24px; font-weight:600; font-variant-numeric:tabular-nums; animation:tampon .5s cubic-bezier(.2,1.6,.4,1) both; }
+.course-direct .cd-arrivee span small { display:block; font-size:10px; font-weight:500; opacity:.6; line-height:1; margin-top:-8px; }
+.course-direct .cd-arrivee span:nth-child(2) { animation-delay:.08s; } .course-direct .cd-arrivee span:nth-child(3) { animation-delay:.16s; }
+.course-direct .cd-arrivee span:nth-child(4) { animation-delay:.24s; } .course-direct .cd-arrivee span:nth-child(5) { animation-delay:.32s; }
+.comp-grille { display:grid; grid-template-columns:minmax(0, 1.5fr) minmax(0, 1fr); gap:12px; }
+.comp-tete { margin:0 0 10px; font-size:14.5px; color:var(--texte-2); }
+.comp-tete b { color:var(--texte); }
+.verifs { list-style:none; margin:0; padding:0; }
+.verifs li { display:grid; grid-template-columns:18px 1fr auto auto; gap:8px; align-items:center; padding:6px 0; border-bottom:1px solid var(--ligne); font-size:13px; }
+.verifs li:last-child { border-bottom:0; }
+.verifs li i { width:16px; height:16px; border-radius:50%; display:grid; place-items:center; font-style:normal; font-size:10px; font-weight:700; color:#fff; background:var(--texte-3); }
+.verifs li.ok i { background:var(--bon); } .verifs li.ko i { background:var(--critique); }
+.verifs li b { font-variant-numeric:tabular-nums; } .verifs li em { font-style:normal; font-size:12px; color:var(--texte-3); min-width:44px; text-align:right; }
+.rapports { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+.rapports span { font-size:12.5px; padding:4px 9px; border:1px solid var(--ligne-forte); border-radius:999px; color:var(--texte-2); }
+.rapports span b { color:var(--texte); }
+tr.place-arrivee td { background:var(--voile-1); }
+
 /* ---------- tuiles ---------- */
 .tuiles { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:12px; margin-top:20px; }
 .tuile { background:var(--surface); border:1px solid var(--ligne); border-radius:10px; padding:14px 16px; min-width:0; }
@@ -288,7 +316,7 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
   .tuiles { grid-template-columns:repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width:860px) {
-  .tete, .methode, .detail-grille, .combis { grid-template-columns:1fr; }
+  .tete, .methode, .detail-grille, .combis, .comp-grille { grid-template-columns:1fr; }
   .combis .cg { grid-row:auto; }
   .tete .gauche { display:contents; }
   .tete > * , .tete .gauche > * { min-width:0; }
@@ -309,6 +337,7 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
   .barre-haut .droite { gap:8px; }
   .etapes { grid-template-columns:repeat(3, 1fr); row-gap:14px; }
   .jours { grid-template-columns:1fr; }
+  .course-direct .cd-arrivee span { min-width:44px; height:44px; font-size:20px; }
   .etapes::before, .etapes .rail { display:none; }
   .tuile .val { font-size:22px; }
   .tuile { padding:12px 13px; }
@@ -353,6 +382,7 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
 </header>
 
 <main id="haut">
+  <section class="course-direct" id="course-direct" hidden aria-live="polite"></section>
   <div class="tete" id="pronostic">
     <div class="gauche">
       <div class="surtitre" id="surtitre">&nbsp;</div>
@@ -370,9 +400,19 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
 
   <div class="tuiles" id="tuiles"></div>
 
-  <section id="jours-section">
-    <div class="tete-section"><h2>Les jours de course</h2><p>Le programme PMU, publié environ deux jours à l'avance ; la page passe seule au Quinté suivant</p></div>
-    <div class="jours" id="jours"></div>
+
+  <section id="comparaison" hidden>
+    <div class="tete-section"><h2>Le lab contre la course</h2><p id="comp-source"></p></div>
+    <div class="comp-grille">
+      <div class="carte pad"><p class="comp-tete" id="comp-tete"></p>
+        <div class="defile"><table><thead><tr><th>Place</th><th>N°</th><th>Cheval</th><th class="n">Choix de la machine</th><th class="n">Chance annoncée</th><th class="n col-tel">Marché</th><th class="n col-tel">Cote</th></tr></thead>
+        <tbody id="comp-chevaux"></tbody></table></div>
+        <div id="comp-rapports"></div>
+      </div>
+      <div class="carte pad"><p class="petit-titre">Ce que le lab avait annoncé</p><ul class="verifs" id="comp-verifs"></ul>
+        <p class="petit-titre" style="margin-top:14px">Les tickets du suivi papier</p><ul class="verifs" id="comp-suivi"></ul>
+        <p class="note" id="comp-bilan"></p></div>
+    </div>
   </section>
 
   <section id="chevaux-section">
@@ -438,6 +478,14 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
     </div>
   </section>
 
+  <section id="jours-section">
+    <div class="tete-section"><h2>Calendrier des courses</h2><p>Le programme PMU (publié environ deux jours à l'avance) et les derniers Quintés suivis par le lab</p></div>
+    <div class="jours" id="jours"></div>
+    <div class="carte" id="passes" hidden style="margin-top:12px"><div class="defile"><table>
+      <thead><tr><th>Jour</th><th>Course</th><th>Arrivée</th><th>Le gagnant chez la machine</th><th class="n">Coupons du lab touchés</th></tr></thead>
+      <tbody id="passes-corps"></tbody></table></div></div>
+  </section>
+
   <div class="prudence"><b>Information, pas un conseil de jeu.</b> Le prélèvement du PMU'B est de 35 % : un ticket au hasard rend 50 à 60 F pour
     100 misés, et aucune des 61 méthodes testées par le lab ne rend sa mise. Le plus probable n'est pas le plus rentable. Ne misez jamais plus
     que ce que vous pouvez perdre.</div>
@@ -463,6 +511,9 @@ const REPERES = {neff: {p25: 6.25, p50: 8.43, p75: 10.52}, favori: 0.223, hors_t
 // Journées à surprise par jour de la semaine (P7, confirmé sur D puis C ; resultats/P7_jours_semaine.md), lundi = 0
 const SURPRISE = [0.350, 0.381, 0.245, 0.345, 0.252, 0.277, 0.351], SURPRISE_TOUS = 0.314;
 const JOURS = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"];
+// Lots de quintés et champ réduit, annoncé / réel sur 1 418 Quintés 2022-2026 (resultats/P6_quinte_lots.md)
+const COUV = {lot5: [0.046, 0.041], 5: [0.012, 0.008], 6: [0.044, 0.043], 7: [0.099, 0.104], 8: [0.176, 0.168], 9: [0.274, 0.272], 10: [0.383, 0.406]};
+const mmss = (s) => `${Math.floor(s / 60)} min ${String(Math.round(s % 60)).padStart(2, "0")} s`;
 const CALIB = [["0 – 2 %", 4877, 1.1, 0.8], ["2 – 5 %", 7031, 3.4, 3.8], ["5 – 10 %", 6041, 7.1, 7.3], ["10 – 15 %", 2254, 12.1, 10.6],
   ["15 – 20 %", 874, 17.2, 17.7], ["20 – 30 %", 700, 23.9, 24.0], ["30 – 40 %", 213, 34.5, 34.7], ["40 % et plus", 137, 49.9, 50.4]];
 const SOURCE = document.querySelector('meta[name="pmub-source"]')?.content || "/api/etat";
@@ -535,7 +586,11 @@ function etatDirect() {
   if (!etat || !etat.course) { cls = "neutre"; txt = etat && etat.vide ? "En attente" : "Connexion"; }
   else {
     const {dep, arret} = moments(), now = new Date(), age = (now - tps(etat.maj_utc)) / 60000;
-    if (etat.mode === "prochaine") { cls = age > 12 ? "neutre" : ""; txt = etat.sans_cote ? "En préparation" : "Prochain Quinté"; }
+    const ph = phase();
+    if (ph === "officielle") { cls = "neutre"; txt = "Arrivée officielle"; }
+    else if (ph === "provisoire") { cls = ""; txt = "Arrivée provisoire"; }
+    else if (ph === "course") { cls = "grave"; txt = "Course en cours"; }
+    else if (etat.mode === "prochaine") { cls = age > 12 ? "neutre" : ""; txt = etat.sans_cote ? "En préparation" : "Prochain Quinté"; }
     else if (etat.resultat) { cls = "neutre"; txt = "Arrivée officielle"; }
     else if (now >= dep) { cls = "neutre"; txt = "Course courue"; }
     else if (now >= arret) { cls = "grave"; txt = "Jeux fermés"; }
@@ -545,7 +600,8 @@ function etatDirect() {
 }
 function seconde() {
   $("#horloge").textContent = heureOuaga();
-  $("#anneau").style.setProperty("--avance", Math.max(0, Math.min(1, 1 - (prochaine - Date.now()) / (PERIODE * 1000))).toFixed(3));
+  $("#anneau").style.setProperty("--avance", Math.max(0, Math.min(1, 1 - (prochaine - Date.now()) / (cadence() * 1000))).toFixed(3));
+  if (etat && etat.course) courseDirect();
   if (!etat || !etat.course) return;
   const {arret, photo, dep} = moments();
   const ea = $("#t-arret"), ep = $("#t-photo");
@@ -591,8 +647,8 @@ function etapes() {
      sens: "À cette heure, le lab fige ses pronostics pour le suivi : ils ne bougeront plus jusqu'à l'arrivée."},
     {nom: "Fin des paris au Burkina", quand: hm(arret), fait: now >= arret, cible: arret, sens: "Après cette heure, on ne peut plus jouer au PMU'B."},
     {nom: "Départ de la course", quand: hm(dep), fait: now >= dep, cible: dep, sens: "La course part en France ; l'arrivée tombe quelques minutes après."},
-    {nom: "Résultat officiel", quand: etat.resultat ? "publié" : "fiche LONAB", fait: !!etat.resultat, cible: null,
-     sens: "Le lab attend la fiche officielle de la LONAB pour vérifier l'arrivée et compter les gains."}];
+    {nom: "Arrivée officielle", quand: (etat.direct || {}).definitive ? "comparée" : "dès qu'elle tombe", fait: !!(etat.direct || {}).definitive, cible: null,
+     sens: "Le lab affiche l'arrivée dès que le PMU la publie, puis la compare à ce qu'il avait annoncé."}];
   const k = E.findIndex((e) => !e.fait), x = E[k];
   const phrase = k < 0 ? "Journée terminée : le résultat officiel est publié."
     : `<b>Prochaine étape : ${esc(x.nom.toLowerCase())}</b>${x.cible ? `, ${esc(x.quand)} (${dans(x.cible)})` : ""}. ${esc(x.sens)}`;
@@ -751,7 +807,18 @@ function combis() {
   $("#combis").innerHTML = carte("Couplé gagnant", "Les 2 premiers, dans n'importe quel ordre · mise 500 F", etat.couple_gagnant, false, "cg") +
     carte("Couplé placé", "Les 2 dans les 3 premiers · mise 500 F", etat.couple_place) +
     (ti.length ? carte("Les 3 premiers dans l'ordre", jourTierce ? "Le tiercé dans l'ordre exact · mise 200 F" : "L'arrivée exacte la plus probable (pas de tiercé au PMU'B aujourd'hui)", ti) : "") +
-    carte(`${esc(pj)} en désordre`, `Les chevaux de la combinaison, dans n'importe quel ordre · mise ${MISE[etat.pari] || 300} F`, etat.pari_du_jour, true);
+    carte(`${esc(pj)} en désordre`, `Les chevaux de la combinaison, dans n'importe quel ordre · mise ${MISE[etat.pari] || 300} F` +
+      (etat.lot5_p ? ` · <b>les 5 ensemble : ${pct(etat.lot5_p)}</b>, soit 1 fois sur ${Math.round(1 / etat.lot5_p)}, pour ${fr(5 * (MISE[etat.pari] || 300))} F` +
+        (etat.pari === "4+1" ? ` (mesuré 2022-2026 : annoncé ${pct(COUV.lot5[0])}, réel ${pct(COUV.lot5[1])})` : "") : ""), etat.pari_du_jour, true) + champ();
+}
+
+function champ() {
+  const C = etat.champ; if (!C || !C.length) return "";
+  const mise = MISE[etat.pari] || 300, k = C[0].n;
+  return `<div class="carte large"><h3>Jouer en champ réduit</h3><p class="sous">Tous les ${esc(PARI[etat.pari] || etat.pari)} possibles avec les N premiers choix de la machine (désordre) : la chance que les ${k} premiers soient dans le lot, et ce que ça coûte.</p>` +
+    `<div class="defile"><table><thead><tr><th>Premiers choix joués</th><th class="n">Chance que l'arrivée y soit</th><th class="n">Tickets</th><th class="n">Mise</th><th class="n col-tel">Mesuré 2022-2026 (réel)</th></tr></thead><tbody>` +
+    C.map((x) => `<tr><td>les ${x.n} premiers</td><td class="n">${pct(x.p)}<span class="mini"><span style="width:${(100 * x.p / C[C.length - 1].p).toFixed(0)}%"></span></span></td><td class="n">${fr(x.tickets)}</td><td class="n">${fr(x.tickets * mise)} F</td>` +
+      `<td class="n col-tel">${etat.pari === "4+1" && COUV[x.n] ? pct(COUV[x.n][1]) : "—"}</td></tr>`).join("") + `</tbody></table></div></div>`;
 }
 
 function tickets() {
@@ -812,6 +879,61 @@ function resultat() {
     `<p class="discret" style="margin:0">Couplé gagnant payé <b>${fr(r.rapports.cg)} F</b> pour 500 · le gagnant avait <b>${pct(r.p_gagnant || 0)}</b> de chances selon la machine · gains des tickets de la machine : ${Object.entries(r.gains).map(([k, v]) => `${esc(k)} ${fr(v)} F`).join(" · ")}</p>`;
 }
 
+function phase() {
+  if (!etat || !etat.course || etat.mode === "prochaine" || !etat.chevaux) return null;
+  const {dep, arret} = moments(), now = new Date(), d = etat.direct || {};
+  if (d.arrivee) return d.definitive ? "officielle" : "provisoire";
+  if (d.categorie === "EN_COURS" || (now >= dep && now < new Date(dep.getTime() + 30 * 60000))) return "course";
+  if (now >= arret && now < dep) return "fermes";
+  return null;
+}
+
+function courseDirect() {
+  const ph = phase(), el = $("#course-direct");
+  if (!ph) { el.hidden = true; return; }
+  el.hidden = false;
+  const d = etat.direct || {}, {dep} = moments(), nom = titre(etat.course.libelle.replace(/^R\d+C\d+\s+/, ""));
+  let h = "";
+  if (ph === "fermes") {
+    h = `<span class="cd-tag"><i></i>Jeux PMU'B fermés</span><div class="cd-titre">Départ dans ${chrono(dep) ?? "quelques instants"}</div>` +
+      `<div class="cd-sous">${esc(nom)} · ${esc(titre(etat.course.hippodrome))} · le lab suit la course et affichera l'arrivée dès que le PMU la publie.</div>`;
+  } else if (ph === "course") {
+    const ecoule = Math.max(0, (new Date() - dep) / 1000), est = d.duree_estimee || 200;
+    h = `<span class="cd-tag"><i></i>Course en cours</span><div class="cd-titre">La course est partie</div>` +
+      `<div class="cd-barre"><span style="width:${Math.min(100, 100 * ecoule / est).toFixed(1)}%"></span></div>` +
+      `<div class="cd-sous">${ecoule < est ? `Arrivée attendue dans environ ${mmss(est - ecoule)} (course d'environ ${mmss(est)})` : "Arrivée imminente : le lab attend l'ordre d'arrivée du PMU (une à deux minutes)."}</div>`;
+  } else {
+    const c = etat.comparaison || {}, g = c.gagnant || {};
+    h = `<span class="cd-tag ok"><i></i>${ph === "officielle" ? "Arrivée officielle" : "Arrivée provisoire"}</span>` +
+      `<div class="cd-arrivee">${d.arrivee.map((n, i) => `<span>${n}</span>`).join("")}</div>` +
+      `<div class="cd-sous">${g.num ? `Le gagnant était le ${g.rang}${g.rang === 1 ? "er" : "e"} choix de la machine (${pct(g.p)}).` : ""}` +
+      `${d.duree ? ` Course courue en ${mmss(d.duree)}.` : ""}${ph === "provisoire" ? " Arrivée provisoire : elle peut encore changer (réclamation)." : ""}</div>`;
+  }
+  if (el.dataset.html !== h) { el.innerHTML = h; el.dataset.html = h; }
+}
+
+function comparaison() {
+  const c = etat.comparaison, el = $("#comparaison");
+  if (!c) { el.hidden = true; return; }
+  el.hidden = false;
+  const g = c.gagnant, top = c.chevaux;
+  $("#comp-source").textContent = `Comparé à la ${c.source}${c.definitive ? "" : " · arrivée provisoire"}`;
+  $("#comp-tete").innerHTML = `Le gagnant, <b>n° ${g.num} ${esc(titre(top[0].nom))}</b>, était le <b>${g.rang}${g.rang === 1 ? "er" : "e"} choix</b> de la machine ` +
+    `(${pct(g.p)} ; le marché : ${pct(g.marche)}). Les ${top.length} premiers étaient tous dans ses <b>${c.max_rang} premiers choix</b>.`;
+  $("#comp-chevaux").innerHTML = top.map((x) => `<tr><td class="n">${x.place}</td><td><span class="numero">${x.num}</span></td><td>${esc(titre(x.nom))}</td>` +
+    `<td class="n">${x.rang ? x.rang + (x.rang === 1 ? "er" : "e") : "—"}</td><td class="n">${pct(x.p)}</td><td class="n col-tel">${pct(x.marche)}</td><td class="n col-tel">${virg(x.cote)}</td></tr>`).join("");
+  const li = (v) => `<li class="${v.ok ? "ok" : "ko"}"><i>${v.ok ? "✓" : "✗"}</i><span>${esc(v.nom)}</span><b>${esc(v.joue)}</b><em>${v.ok ? "gagné" : "perdu"}</em></li>`;
+  $("#comp-verifs").innerHTML = c.verifs.map(li).join("");
+  $("#comp-suivi").innerHTML = c.suivi.length ? c.suivi.map(li).join("") : `<li><span class="discret">Pas de ticket figé pour cette course.</span></li>`;
+  const R = (etat.direct || {}).rapports_fr || [], vus = new Set(), garde = [];
+  R.forEach((r) => { const k = r.pari + r.libelle; if (!vus.has(k) && ["SIMPLE_GAGNANT", "COUPLE_GAGNANT", "TIERCE", "QUARTE_PLUS", "QUINTE_PLUS"].includes(r.pari) && !/Place|Bonus/i.test(r.libelle)) { vus.add(k); garde.push(r); } });
+  $("#comp-rapports").innerHTML = (garde.length ? `<p class="petit-titre" style="margin-top:14px">Rapports français définitifs (pour 1 €)</p><div class="rapports">` +
+    garde.map((r) => `<span>${esc(r.libelle)} ${esc(r.combinaison)} : <b>${virg(r.euros, 2)} €</b></span>`).join("") + `</div>` : "") +
+    `<p class="note">${etat.resultat ? `Rapports PMU'B (fiche LONAB) : couplé gagnant ${fr(etat.resultat.rapports.cg)} F pour 500.` : "Rapports PMU'B : dès la publication de la fiche officielle de la LONAB."}</p>`;
+  const b = etat.bilan || {};
+  $("#comp-bilan").innerHTML = b.courses ? `Bilan du lab depuis le début du suivi : <b>${b.courses}</b> course${b.courses > 1 ? "s" : ""} ; le gagnant était son 1er choix ${b.gagnant_1} fois, dans ses 3 premiers choix ${b.gagnant_3} fois ; chance moyenne donnée au gagnant : ${pct(b.p_moy)}.` : "";
+}
+
 function signaux() {
   const S = etat.signaux || [], vus = new Set(((avant && avant.signaux) || []).map((s) => s.texte));
   $("#signaux").hidden = !S.length;
@@ -831,6 +953,17 @@ function jours() {
   }).join("");
 }
 
+function passes() {
+  const L = ((etat.bilan || {}).liste || []);
+  $("#passes").hidden = !L.length;
+  $("#passes-corps").innerHTML = L.map((x) => {
+    const v = Object.values(x.verifs || {}), j = new Date(x.date + "T12:00:00Z").toLocaleDateString("fr-FR", {weekday: "short", day: "numeric", month: "short"});
+    return `<tr><td>${esc(j)}</td><td>${esc(titre(x.libelle.replace(/^R\d+C\d+\s+/, "")))} <span class="discret">· ${esc(titre(x.hippodrome))}</span></td>` +
+      `<td class="num"><b>${x.arrivee.join("-")}</b></td><td>n° ${x.gagnant.num} : ${x.gagnant.rang}${x.gagnant.rang === 1 ? "er" : "e"} choix (${pct(x.gagnant.p)})</td>` +
+      `<td class="n">${v.filter(Boolean).length} / ${v.length}</td></tr>`;
+  }).join("");
+}
+
 function dernier() {
   const dn = etat.dernier, el = $("#dernier");
   if (!dn) { el.hidden = true; return; }
@@ -838,6 +971,7 @@ function dernier() {
   el.hidden = false;
   el.innerHTML = `<b>Dernier Quinté</b> · ${esc(titre(dn.libelle.replace(/^R\d+C\d+\s+/, "")))} (${esc(titre(dn.hippodrome))}) : ` +
     (arr.length ? `arrivée <b class="num">${arr.join("-")}</b>${dn.p_gagnant ? ` ; la machine donnait au gagnant ${pct(dn.p_gagnant)} de chances` : ""}.` : "arrivée en attente.") +
+    (dn.comparaison ? ` Le gagnant était le ${dn.comparaison.gagnant.rang}${dn.comparaison.gagnant.rang === 1 ? "er" : "e"} choix de la machine ; coupons touchés : ${dn.comparaison.verifs.filter((v) => v.ok).length} sur ${dn.comparaison.verifs.length}.` : "") +
     (dn.resultat ? ` Couplé gagnant PMU'B : ${fr(dn.resultat.rapports.cg)} F pour 500.` : "");
 }
 
@@ -848,7 +982,7 @@ function rendre() {
     $("#puces").innerHTML = `<span>${esc(etat && etat.vide ? etat.vide : "Pas encore de données.")}</span>`;
     return;
   }
-  entete(); etapes(); coupon(); tuiles(); fil(); lecture(); chevaux(); combis(); tickets(); resultat(); signaux(); jours(); dernier();
+  passes(); entete(); etapes(); courseDirect(); coupon(); tuiles(); comparaison(); fil(); lecture(); chevaux(); combis(); tickets(); resultat(); signaux(); jours(); dernier();
   if (premier || (avant && avant.maj !== etat.maj)) courbe(premier);
   $("#calibration").innerHTML = CALIB.map((c) => `<tr><td>${c[0]}</td><td class="n col-tel">${fr(c[1])}</td><td class="n">${virg(c[2], 1)} %</td><td class="n"><b>${virg(c[3], 1)} %</b></td></tr>`).join("");
   $("#empreinte").innerHTML = `Modèle figé : <span class="mono">${esc((etat.sha || "").slice(0, 16))}</span> · règles : <span class="mono">PREENREGISTREMENT_P6.md</span>`;
@@ -876,7 +1010,6 @@ $("#chevaux").addEventListener("keydown", (ev) => {
 });
 
 async function charger() {
-  prochaine = Date.now() + PERIODE * 1000;
   try {
     const r = await fetch(PUBLIC ? `${SOURCE}?t=${Date.now()}` : SOURCE, {cache: "no-store"});
     if (!r.ok) throw new Error(r.status);
@@ -886,8 +1019,13 @@ async function charger() {
   } catch (e) { if (!etat) etat = {vide: "Connexion impossible pour le moment : nouvel essai dans une minute."}; }
   rendre();
 }
-charger();
-setInterval(charger, PERIODE * 1000);
+function cadence() {
+  if (!etat || !etat.course || etat.mode === "prochaine") return PERIODE;
+  const {dep} = moments(), now = new Date();
+  return now > new Date(dep - 20 * 60000) && now < new Date(dep.getTime() + 60 * 60000) && !(etat.direct || {}).definitive ? 20 : PERIODE;
+}
+async function boucle() { await charger(); prochaine = Date.now() + cadence() * 1000; setTimeout(boucle, cadence() * 1000); }
+boucle();
 setInterval(seconde, 1000);
 document.addEventListener("visibilitychange", () => { if (!document.hidden) charger(); });
 let attente; window.addEventListener("resize", () => { clearTimeout(attente); attente = setTimeout(() => { if (etat && etat.chevaux) courbe(false); }, 200); });
