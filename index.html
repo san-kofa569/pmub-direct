@@ -155,6 +155,8 @@ h1 { font-family:"Source Serif", Georgia, serif; font-weight:600; font-size:40px
 .rapports span b { color:var(--texte); }
 tr.place-arrivee td { background:var(--voile-1); }
 
+.demo { background:var(--attention); color:#2a1b00; text-align:center; font-weight:600; font-size:13px; padding:8px 16px; }
+
 /* ---------- tuiles ---------- */
 .tuiles { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:12px; margin-top:20px; }
 .tuile { background:var(--surface); border:1px solid var(--ligne); border-radius:10px; padding:14px 16px; min-width:0; }
@@ -382,6 +384,7 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
   <div class="bandeau-fil" id="bandeau-fil" hidden><div class="int"><span class="h" id="bf-h"></span><span id="bf-t"></span><a href="#fil-section">Tout le fil</a></div></div>
 </header>
 
+<div class="demo" id="demo" hidden></div>
 <main id="haut">
   <section class="course-direct" id="course-direct" hidden aria-live="polite"></section>
   <div class="tete" id="pronostic">
@@ -514,6 +517,8 @@ const SURPRISE = [0.350, 0.381, 0.245, 0.345, 0.252, 0.277, 0.351], SURPRISE_TOU
 const JOURS = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"];
 // Lots de quintés et champ réduit, annoncé / réel sur 1 418 Quintés 2022-2026 (resultats/P6_quinte_lots.md)
 const COUV = {lot5: [0.046, 0.041], 5: [0.012, 0.008], 6: [0.044, 0.043], 7: [0.099, 0.104], 8: [0.176, 0.168], 9: [0.274, 0.272], 10: [0.383, 0.406]};
+// Ce qu'aurait rendu le champ réduit sur 606 journées 4+1 PMU'B 2022-2026 : [4+1 désordre médian les jours touchés (F), rendu pour 1 F]
+const CHAMP_RENDU = {6: [5750, 0.30], 7: [8500, 0.31], 8: [12000, 0.27], 9: [17000, 0.32], 10: [24000, 0.31]};
 const mmss = (s) => `${Math.floor(s / 60)} min ${String(Math.round(s % 60)).padStart(2, "0")} s`;
 const CALIB = [["0 – 2 %", 4877, 1.1, 0.8], ["2 – 5 %", 7031, 3.4, 3.8], ["5 – 10 %", 6041, 7.1, 7.3], ["10 – 15 %", 2254, 12.1, 10.6],
   ["15 – 20 %", 874, 17.2, 17.7], ["20 – 30 %", 700, 23.9, 24.0], ["30 – 40 %", 213, 34.5, 34.7], ["40 % et plus", 137, 49.9, 50.4]];
@@ -816,10 +821,15 @@ function combis() {
 function champ() {
   const C = etat.champ; if (!C || !C.length) return "";
   const mise = MISE[etat.pari] || 300, k = C[0].n;
-  return `<div class="carte large"><h3>Jouer en champ réduit</h3><p class="sous">Tous les ${esc(PARI[etat.pari] || etat.pari)} possibles avec les N premiers choix de la machine (désordre) : la chance que les ${k} premiers soient dans le lot, et ce que ça coûte.</p>` +
-    `<div class="defile"><table><thead><tr><th>Premiers choix joués</th><th class="n">Chance que l'arrivée y soit</th><th class="n">Tickets</th><th class="n">Mise</th><th class="n col-tel">Mesuré 2022-2026 (réel)</th></tr></thead><tbody>` +
+  const q = etat.pari === "4+1";
+  return `<div class="carte large"><h3>Jouer en champ réduit</h3><p class="sous">On prend les N chevaux que la machine classe en tête et on joue toutes les combinaisons de ${k} parmi eux (en désordre). ` +
+    `« Ce soir » : la chance, selon la machine, que les ${k} premiers de la course soient tous dans ces N chevaux. ` +
+    (q ? `<b>Attention : les jours où ça tombe, ce sont surtout des favoris et le 4+1 paie peu ; sur 2022-2026, chaque formule a rendu environ 0,30 F pour 1 F misé.</b>` : "") + `</p>` +
+    `<div class="defile"><table><thead><tr><th>Premiers choix joués</th><th class="n">Ce soir : chance que l'arrivée y soit</th><th class="n">Tickets</th><th class="n">Mise</th>` +
+    (q ? `<th class="n col-tel">2022-2026 : arrivée dans le lot</th><th class="n col-tel">Ces jours-là, le 4+1 a payé (médiane)</th><th class="n">Rendu pour 1 F</th>` : "") + `</tr></thead><tbody>` +
     C.map((x) => `<tr><td>les ${x.n} premiers</td><td class="n">${pct(x.p)}<span class="mini"><span style="width:${(100 * x.p / C[C.length - 1].p).toFixed(0)}%"></span></span></td><td class="n">${fr(x.tickets)}</td><td class="n">${fr(x.tickets * mise)} F</td>` +
-      `<td class="n col-tel">${etat.pari === "4+1" && COUV[x.n] ? pct(COUV[x.n][1]) : "—"}</td></tr>`).join("") + `</tbody></table></div></div>`;
+      (q ? `<td class="n col-tel">${COUV[x.n] ? pct(COUV[x.n][1]) : "—"}</td><td class="n col-tel">${CHAMP_RENDU[x.n] ? fr(CHAMP_RENDU[x.n][0]) + " F" : "—"}</td><td class="n">${CHAMP_RENDU[x.n] ? virg(CHAMP_RENDU[x.n][1], 2) : "—"}</td>` : "") +
+      `</tr>`).join("") + `</tbody></table></div></div>`;
 }
 
 function tickets() {
@@ -977,6 +987,8 @@ function dernier() {
 }
 
 function rendre() {
+  $("#demo").hidden = !(etat && etat.demo);
+  if (etat && etat.demo) $("#demo").textContent = etat.demo;
   etatDirect();
   if (!etat || etat.vide || !etat.chevaux) {
     $("#titre").textContent = "Le Quinté du jour";
