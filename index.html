@@ -141,6 +141,10 @@ h1 { font-family:"Source Serif", Georgia, serif; font-weight:600; font-size:40px
 .course-direct .cd-arrivee span small { display:block; font-size:10px; font-weight:500; opacity:.6; line-height:1; margin-top:-8px; }
 .course-direct .cd-arrivee span:nth-child(2) { animation-delay:.08s; } .course-direct .cd-arrivee span:nth-child(3) { animation-delay:.16s; }
 .course-direct .cd-arrivee span:nth-child(4) { animation-delay:.24s; } .course-direct .cd-arrivee span:nth-child(5) { animation-delay:.32s; }
+.course-direct .cd-liens { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+.course-direct .cd-liens a { color:var(--marine-texte); text-decoration:none; font-size:12.5px; padding:6px 11px; border-radius:8px; border:1px solid #ffffff33; background:#ffffff10; }
+.course-direct .cd-liens a:hover { background:#ffffff22; }
+.course-direct .cd-frais { margin-top:8px; font-size:11.5px; opacity:.6; font-variant-numeric:tabular-nums; }
 .comp-grille { display:grid; grid-template-columns:minmax(0, 1.5fr) minmax(0, 1fr); gap:12px; }
 .comp-tete { margin:0 0 10px; font-size:14.5px; color:var(--texte-2); }
 .comp-tete b { color:var(--texte); }
@@ -524,7 +528,9 @@ const CALIB = [["0 – 2 %", 4877, 1.1, 0.8], ["2 – 5 %", 7031, 3.4, 3.8], ["5
   ["15 – 20 %", 874, 17.2, 17.7], ["20 – 30 %", 700, 23.9, 24.0], ["30 – 40 %", 213, 34.5, 34.7], ["40 % et plus", 137, 49.9, 50.4]];
 const SOURCE = document.querySelector('meta[name="pmub-source"]')?.content || "/api/etat";
 const PUBLIC = SOURCE !== "/api/etat";
-const PERIODE = 60;  // secondes entre deux lectures de l'état
+const PERIODE = 5;  // secondes entre deux lectures de l'état ; le direct de la course est relu toutes les 3 s
+const SOURCE_LIVE = PUBLIC ? SOURCE.replace(/etat\.json$/, "live.json") : "/api/live";
+let live = null, demoDepart = null;
 let etat = null, avant = null, prochaine = Date.now() + PERIODE * 1000, premier = true;
 const ouverts = new Set();
 (location.hash.match(/^#cheval-(\d+)$/) || []).slice(1).forEach((n) => ouverts.add(Number(n)));
@@ -762,7 +768,7 @@ function chevaux() {
   const ch = etat.chevaux, max = Math.max(...ch.map((x) => Math.max(x.p, x.p_cote_recal)));
   const W = (x) => (100 * x / max).toFixed(1);
   const prec = avant && avant.chevaux ? Object.fromEntries(avant.chevaux.map((x) => [x.num, x])) : {};
-  const h = etat.historique || [], hp = h.length > 1 ? h[h.length - 2].c || {} : {};
+  const h = etat.historique || [], hp = live && live.actif && live.cotes_avant ? live.cotes_avant : (h.length > 1 ? h[h.length - 2].c || {} : {});
   tb.innerHTML = ch.map((x, i) => {
     const d = 100 * (x.p - x.p_cote_recal), cote = x.cote_direct ?? x.cote_ref, cAvant = hp[String(x.num)];
     const fl = cAvant && cote && cAvant !== cote ? `<span class="tri ${cote < cAvant ? "cote-baisse" : "cote-monte"}" title="${cote < cAvant ? "cote en baisse : cheval plus joué" : "cote en hausse : cheval moins joué"} (${virg(cAvant)} → ${virg(cote)})"></span>` : "";
@@ -890,6 +896,33 @@ function resultat() {
     `<p class="discret" style="margin:0">Couplé gagnant payé <b>${fr(r.rapports.cg)} F</b> pour 500 · le gagnant avait <b>${pct(r.p_gagnant || 0)}</b> de chances selon la machine · gains des tickets de la machine : ${Object.entries(r.gains).map(([k, v]) => `${esc(k)} ${fr(v)} F`).join(" · ")}</p>`;
 }
 
+function fusion() {
+  if (!etat || !etat.chevaux || !live || !live.actif || live.date !== etat.date || etat.mode !== "jour") return;
+  const d = etat.direct || {};
+  etat.direct = {...d, statut: live.statut || d.statut, categorie: live.categorie || d.categorie, arrivee: live.arrivee || d.arrivee,
+                 definitive: live.definitive || d.definitive, duree: live.duree || d.duree};
+  if (live.cotes) etat.chevaux.forEach((x) => { const c = live.cotes[String(x.num)]; if (c) x.cote_direct = c; });
+}
+
+function enCourse() {
+  if (!etat || !etat.course || etat.mode !== "jour" || !etat.chevaux) return false;
+  const {dep} = moments(), now = new Date();
+  return now > new Date(dep - 40 * 60000) && now < new Date(dep.getTime() + 50 * 60000) && !(etat.direct || {}).definitive;
+}
+
+async function chargerLive() {
+  try {
+    const r = await fetch(PUBLIC ? `${SOURCE_LIVE}?t=${Date.now()}` : SOURCE_LIVE, {cache: "no-store"});
+    if (!r.ok) return;
+    const n = await r.json(), cotesAvant = JSON.stringify(live && live.cotes), arrAvant = JSON.stringify(live && live.arrivee);
+    live = n;
+    fusion(); courseDirect(); etatDirect();
+    if (JSON.stringify(n.cotes) !== cotesAvant) chevaux();
+    if (n.arrivee && JSON.stringify(n.arrivee) !== arrAvant) toast(`Arrivée ${n.definitive ? "officielle" : "provisoire"} : ${n.arrivee.join(" - ")}`);
+  } catch (e) { /* réseau : nouvel essai dans 3 s */ }
+}
+async function boucleLive() { if (enCourse()) await chargerLive(); setTimeout(boucleLive, 3000); }
+
 function phase() {
   if (!etat || !etat.course || etat.mode === "prochaine" || !etat.chevaux) return null;
   const {dep, arret} = moments(), now = new Date(), d = etat.direct || {};
@@ -920,7 +953,13 @@ function courseDirect() {
       `<div class="cd-sous">${g.num ? `Le gagnant était le ${g.rang}${g.rang === 1 ? "er" : "e"} choix de la machine (${pct(g.p)}).` : ""}` +
       `${d.duree ? ` Course courue en ${mmss(d.duree)}.` : ""}${ph === "provisoire" ? " Arrivée provisoire : elle peut encore changer (réclamation)." : ""}</div>`;
   }
+  const rcm = etat.course.libelle.match(/^R(\d+)C(\d+)/), jj = etat.date.split("-").reverse().join("");
+  h += `<div class="cd-liens"><a href="https://www.equidia.fr/live" target="_blank" rel="noopener">▶ Voir la course en vidéo (Equidia, direct officiel)</a>` +
+    (rcm ? `<a href="https://www.pmu.fr/turf/${jj}/R${rcm[1]}/C${rcm[2]}" target="_blank" rel="noopener">La course sur PMU.fr</a>` : "") + `</div>`;
+  if (live && live.actif && live.maj_utc) h += `<div class="cd-frais" id="cd-frais"></div>`;
   if (el.dataset.html !== h) { el.innerHTML = h; el.dataset.html = h; }
+  const fr_ = $("#cd-frais");
+  if (fr_) fr_.textContent = `Direct relu toutes les 3 secondes · dernière lecture il y a ${Math.max(0, Math.round((new Date() - new Date(live.maj_utc)) / 1000))} s`;
 }
 
 function comparaison() {
@@ -1027,18 +1066,16 @@ async function charger() {
     const r = await fetch(PUBLIC ? `${SOURCE}?t=${Date.now()}` : SOURCE, {cache: "no-store"});
     if (!r.ok) throw new Error(r.status);
     const neuf = await r.json();
+    if (neuf.demo_depart_dans != null) { demoDepart = demoDepart || Date.now() + neuf.demo_depart_dans * 1000; neuf.course.depart_utc = new Date(demoDepart).toISOString(); neuf.maj_utc = new Date().toISOString(); }
     if (etat && neuf.maj_utc === etat.maj_utc && !premier) { etatDirect(); return; }
-    avant = etat; etat = neuf;
+    avant = etat; etat = neuf; fusion();
   } catch (e) { if (!etat) etat = {vide: "Connexion impossible pour le moment : nouvel essai dans une minute."}; }
   rendre();
 }
-function cadence() {
-  if (!etat || !etat.course || etat.mode === "prochaine") return PERIODE;
-  const {dep} = moments(), now = new Date();
-  return now > new Date(dep - 20 * 60000) && now < new Date(dep.getTime() + 60 * 60000) && !(etat.direct || {}).definitive ? 20 : PERIODE;
-}
+function cadence() { return PERIODE; }
 async function boucle() { await charger(); prochaine = Date.now() + cadence() * 1000; setTimeout(boucle, cadence() * 1000); }
 boucle();
+boucleLive();
 setInterval(seconde, 1000);
 document.addEventListener("visibilitychange", () => { if (!document.hidden) charger(); });
 let attente; window.addEventListener("resize", () => { clearTimeout(attente); attente = setTimeout(() => { if (etat && etat.chevaux) courbe(false); }, 200); });
