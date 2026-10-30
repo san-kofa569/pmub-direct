@@ -276,7 +276,9 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
 @media (max-width:560px) {
   main, .barre-haut .int, footer { padding-left:16px; padding-right:16px; }
   .barre-haut .int { gap:10px; }
-  .horloge { display:none; }
+  .horloge, .logo b { display:none; }
+  .direct { white-space:nowrap; letter-spacing:.05em; }
+  .barre-haut .droite { gap:8px; }
   .etapes { grid-template-columns:repeat(3, 1fr); row-gap:14px; }
   .etapes::before, .etapes .rail { display:none; }
   .tuile .val { font-size:22px; }
