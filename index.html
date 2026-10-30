@@ -543,13 +543,13 @@ const CHAMP_RENDU = {6: [5750, 0.30], 7: [8500, 0.31], 8: [12000, 0.27], 9: [170
 const mmss = (s) => `${Math.floor(s / 60)} min ${String(Math.round(s % 60)).padStart(2, "0")} s`;
 const CALIB = [["0 – 2 %", 4877, 1.1, 0.8], ["2 – 5 %", 7031, 3.4, 3.8], ["5 – 10 %", 6041, 7.1, 7.3], ["10 – 15 %", 2254, 12.1, 10.6],
   ["15 – 20 %", 874, 17.2, 17.7], ["20 – 30 %", 700, 23.9, 24.0], ["30 – 40 %", 213, 34.5, 34.7], ["40 % et plus", 137, 49.9, 50.4]];
-const SOURCE = document.querySelector('meta[name="pmub-source"]')?.content || "/api/etat";
+let SOURCE = document.querySelector('meta[name="pmub-source"]')?.content || "/api/etat";
 const PUBLIC = SOURCE !== "/api/etat";
 const PERIODE = 5;  // secondes entre deux lectures de l'état ; le direct de la course est relu toutes les 3 s
-const SOURCE_LIVE = PUBLIC ? SOURCE.replace(/etat\.json$/, "live.json") : "/api/live";
+let SOURCE_LIVE = PUBLIC ? SOURCE.replace(/etat\.json$/, "live.json") : "/api/live";
 // version publique servie par le VPS : la copie GitHub n'est lue que si le VPS ne répond pas
-const SECOURS = document.querySelector('meta[name="pmub-secours"]')?.content || "";
-const SECOURS_LIVE = SECOURS.replace(/etat\.json$/, "live.json");
+let SECOURS = document.querySelector('meta[name="pmub-secours"]')?.content || "";
+let SECOURS_LIVE = SECOURS.replace(/etat\.json$/, "live.json");
 async function lire(url, secours) {
   const un = async (u) => {
     const r = await fetch(PUBLIC ? `${u}?t=${Date.now()}` : u, {cache: "no-store", signal: AbortSignal.timeout ? AbortSignal.timeout(4000) : undefined});
@@ -1116,6 +1116,10 @@ $("#chevaux").addEventListener("keydown", (ev) => {
 async function charger() {
   try {
     const neuf = await lire(SOURCE, SECOURS);
+    if (PUBLIC && neuf.source_vps && neuf.source_vps !== SOURCE) {  // nouvelle adresse du VPS (tunnel relancé) : on la suit, GitHub reste le secours
+      if (!SECOURS) { SECOURS = SOURCE; SECOURS_LIVE = SOURCE_LIVE; }
+      SOURCE = neuf.source_vps; SOURCE_LIVE = SOURCE.replace(/etat\.json$/, "live.json");
+    }
     if (neuf.demo_depart_dans != null) { demoDepart = demoDepart || Date.now() + neuf.demo_depart_dans * 1000; neuf.course.depart_utc = new Date(demoDepart).toISOString(); neuf.maj_utc = new Date().toISOString(); }
     if (etat && neuf.maj_utc === etat.maj_utc && !premier) { etatDirect(); return; }
     avant = etat; etat = neuf; fusion();
