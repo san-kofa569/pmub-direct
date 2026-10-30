@@ -433,6 +433,9 @@ const MISE = {"tierce": 200, "quarte": 200, "4+1": 300};
 const COULEURS = ["--c1", "--c2", "--c3", "--c4", "--c5", "--c6"];
 // Repères : modèle figé, 1 453 Quintés hors échantillon (01/11/2022 → 28/10/2026)
 const REPERES = {neff: {p25: 6.25, p50: 8.43, p75: 10.52}, favori: 0.223, hors_top5: 0.335};
+// Journées à surprise par jour de la semaine (P7, confirmé sur D puis C ; resultats/P7_jours_semaine.md), lundi = 0
+const SURPRISE = [0.350, 0.381, 0.245, 0.345, 0.252, 0.277, 0.351], SURPRISE_TOUS = 0.314;
+const JOURS = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"];
 const CALIB = [["0 – 2 %", 4877, 1.1, 0.8], ["2 – 5 %", 7031, 3.4, 3.8], ["5 – 10 %", 6041, 7.1, 7.3], ["10 – 15 %", 2254, 12.1, 10.6],
   ["15 – 20 %", 874, 17.2, 17.7], ["20 – 30 %", 700, 23.9, 24.0], ["30 – 40 %", 213, 34.5, 34.7], ["40 % et plus", 137, 49.9, 50.4]];
 const SOURCE = document.querySelector('meta[name="pmub-source"]')?.content || "/api/etat";
@@ -626,6 +629,9 @@ function lecture() {
   L.push(`Le favori, <b>n° ${f.num} ${esc(titre(f.nom))}</b>, gagne une course sur ${Math.round(1 / f.p)} et finit dans les 3 premiers ${pct(f.p3, 0)} du temps.`);
   L.push(`Les 4 premiers (${ch.slice(0, 4).map((x) => x.num).join(", ")}) gagnent ensemble <b>${pct(a.top4, 0)}</b> du temps ; le gagnant sort hors des 5 premiers <b>${pct(1 - a.top5, 0)}</b> du temps.`);
   L.push(`La machine croit plus au <b>n° ${a.haut.x.num}</b> (+${virg(Math.abs(100 * a.haut.d), 1)} pt) et moins au <b>n° ${a.bas.x.num}</b> (−${virg(Math.abs(100 * a.bas.d), 1)} pt) que le marché ; ces écarts n'ont jamais été rentables.`);
+  const w = (new Date(etat.date + "T12:00:00Z").getUTCDay() + 6) % 7, sw = SURPRISE[w];
+  L.push(`Le ${JOURS[w]}, <b>${pct(sw, 0)}</b> des Quintés finissent en surprise (gros rapport du couplé), contre ${pct(SURPRISE_TOUS, 0)} tous jours confondus : ` +
+    `le jour de la semaine dit quel genre de course on court${sw < SURPRISE_TOUS ? " (plus souvent du trot, favori plus net)" : " (plus souvent du plat ou de l'obstacle, favori moins net)"}. Vérifié sur 2015-2026 ; ça ne rapporte rien seul.`);
   if (c.discipline === "trot attelé") L.push(`Au trot attelé, les outsiders sont les plus surjoués : un ticket au hasard y rend 0,43 à 0,47 pour 1 misé.`);
   $("#lecture").innerHTML = L.map((x) => `<li>${x}</li>`).join("");
 }
