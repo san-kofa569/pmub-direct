@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#14243b">
 <meta name="description" content="Le Quinté+ du PMU'B en direct : chances de chaque cheval et combinaisons les plus probables, calculées par le lab.">
 <title>Lab PMU'B — le Quinté en direct</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2314243b'/%3E%3Cpath d='M9 22V10h3.2l3.8 7 3.8-7H23v12h-2.6v-7.6L16.9 21h-1.8l-3.5-6.6V22z' fill='%23e9edf3'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2314243b'/%3E%3Cpath d='M9.5 7.5v8.5a6.5 6.5 0 0 0 13 0V7.5' fill='none' stroke='%23e9edf3' stroke-width='3.4' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
 @font-face { font-family:"Plex Sans"; src:url("polices/ibm-plex-sans-latin-400-normal.woff2") format("woff2"); font-weight:400; font-display:swap; }
 @font-face { font-family:"Plex Sans"; src:url("polices/ibm-plex-sans-latin-500-normal.woff2") format("woff2"); font-weight:500; font-display:swap; }
@@ -66,16 +66,23 @@ main { max-width:1240px; margin:0 auto; padding:22px 20px 40px; }
 .tete { display:grid; grid-template-columns:minmax(0, 1.25fr) minmax(0, 1fr); gap:20px; align-items:stretch; }
 .surtitre { font-size:12px; letter-spacing:.09em; text-transform:uppercase; color:var(--texte-3); font-weight:500; }
 h1 { font-family:"Source Serif", Georgia, serif; font-weight:600; font-size:40px; line-height:1.1; margin:6px 0 10px; letter-spacing:-.015em; }
+.nom-course { margin:-4px 0 12px; font-size:15px; color:var(--texte-2); }
+.nom-course b { color:var(--texte); font-weight:600; }
 .puces { display:flex; flex-wrap:wrap; gap:6px; }
 .puces span { font-size:12.5px; padding:3px 9px; border:1px solid var(--ligne-forte); border-radius:999px; color:var(--texte-2); background:var(--surface); }
 .puces span b { color:var(--texte); font-weight:600; }
 
-.etapes { list-style:none; margin:20px 0 0; padding:0; display:grid; grid-template-columns:repeat(6, 1fr); position:relative; }
+.deroule { margin-top:22px; }
+.deroule .petit-titre { margin-bottom:4px; }
+.deroule-phrase { margin:0; font-size:13.5px; color:var(--texte-2); }
+.deroule-phrase b { color:var(--texte); font-weight:600; }
+.etapes { list-style:none; margin:14px 0 0; padding:0; display:grid; grid-template-columns:repeat(6, 1fr); position:relative; }
 .etapes::before { content:""; position:absolute; left:8px; right:8px; top:8px; height:2px; background:var(--ligne-forte); }
 .etapes .rail { position:absolute; left:8px; top:8px; height:2px; background:var(--serie-1); width:var(--rail, 0%); transition:width 1s ease; }
 .etapes li { position:relative; padding-top:24px; font-size:12px; color:var(--texte-3); line-height:1.3; }
 .etapes li::before { content:""; position:absolute; left:2px; top:2px; width:10px; height:10px; border-radius:50%; background:var(--surface); border:2px solid var(--ligne-forte); }
 .etapes li.fait { color:var(--texte-2); } .etapes li.fait::before { background:var(--serie-1); border-color:var(--serie-1); }
+.etapes li.fait::after { content:""; position:absolute; left:5.5px; top:4.5px; width:3px; height:5px; border:solid var(--surface); border-width:0 1.6px 1.6px 0; transform:rotate(45deg); }
 .etapes li.encours { color:var(--texte); font-weight:600; }
 .etapes li.encours::before { border-color:var(--serie-1); background:var(--surface); box-shadow:0 0 0 4px var(--voile-1); animation:halo 1.6s ease-in-out infinite; }
 .etapes li small { display:block; font-weight:400; color:var(--texte-3); font-variant-numeric:tabular-nums; }
@@ -266,7 +273,7 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
   .combis .cg { grid-row:auto; }
   .tete .gauche { display:contents; }
   .tete > * , .tete .gauche > * { min-width:0; }
-  #surtitre { order:1; } #titre { order:2; } #puces { order:3; } #coupon { order:4; } #etapes { order:5; } #lecture-carte { order:6; }
+  #surtitre { order:1; } #titre { order:2; } #nom-course { order:3; } #puces { order:3; } #coupon { order:4; } .deroule { order:5; } #etapes { order:5; } #lecture-carte { order:6; }
   .tete { gap:0; } #coupon { margin-top:18px; } .lecture-carte { margin-top:18px; }
   h1 { font-size:31px; }
   .barre { width:96px; }
@@ -276,7 +283,9 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
 @media (max-width:560px) {
   main, .barre-haut .int, footer { padding-left:16px; padding-right:16px; }
   .barre-haut .int { gap:10px; }
-  .horloge, .logo b { display:none; }
+  .horloge, .anneau { display:none; }
+  .logo b { letter-spacing:.08em; font-size:11.5px; }
+  .barre-haut .bouton { padding:4px 8px; font-size:11.5px; }
   .direct { white-space:nowrap; letter-spacing:.05em; }
   .barre-haut .droite { gap:8px; }
   .etapes { grid-template-columns:repeat(3, 1fr); row-gap:14px; }
@@ -309,7 +318,7 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
 <body>
 <header class="barre-haut"><div class="int">
   <a class="logo" href="#haut" aria-label="Lab PMU'B">
-    <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#ffffff14"/><path d="M9 22V10h3.2l3.8 7 3.8-7H23v12h-2.6v-7.6L16.9 21h-1.8l-3.5-6.6V22z" fill="currentColor"/></svg>
+    <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#ffffff17"/><path d="M9.5 7.5v8.5a6.5 6.5 0 0 0 13 0V7.5" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/><g fill="var(--marine)"><circle cx="9.5" cy="10.5" r="0.95"/><circle cx="9.5" cy="15" r="0.95"/><circle cx="22.5" cy="10.5" r="0.95"/><circle cx="22.5" cy="15" r="0.95"/><circle cx="12.4" cy="20.6" r="0.95"/><circle cx="19.6" cy="20.6" r="0.95"/></g></svg>
     <b>Lab PMU'B</b><span>Le Quinté en direct</span>
   </a>
   <div class="droite">
@@ -328,7 +337,9 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
     <div class="gauche">
       <div class="surtitre" id="surtitre">&nbsp;</div>
       <h1 id="titre">Le Quinté du jour</h1>
+      <p class="nom-course" id="nom-course"></p>
       <div class="puces" id="puces"></div>
+      <div class="deroule"><p class="petit-titre">Le déroulé de la journée</p><p class="deroule-phrase" id="deroule-phrase"></p></div>
       <ol class="etapes" id="etapes"></ol>
       <div class="carte pad lecture-carte" id="lecture-carte"><p class="petit-titre">Lecture du jour</p><ol class="lecture" id="lecture"></ol></div>
     </div>
@@ -365,7 +376,7 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
   </div>
 
   <section>
-    <div class="tete-section"><h2>Tickets du suivi papier</h2><p>Mise fictive ; tickets figés par la photo officielle, entre 28 et 11 minutes avant le départ</p></div>
+    <div class="tete-section"><h2>Tickets du suivi papier</h2><p>Mise fictive ; tickets figés entre 28 et 11 minutes avant le départ</p></div>
     <div class="carte"><div class="defile"><table>
       <thead><tr><th>Méthode</th><th class="col-tel">Famille</th><th>Ticket</th><th>État</th></tr></thead>
       <tbody id="tickets"></tbody>
@@ -518,24 +529,42 @@ function seconde() {
 function entete() {
   const c = etat.course, rc = (c.libelle.match(/^R\d+C\d+/) || [""])[0];
   const jour = new Date(etat.date + "T12:00:00Z").toLocaleDateString("fr-FR", {weekday: "long", day: "numeric", month: "long"});
-  $("#surtitre").textContent = `Quinté+ du ${jour} · ${rc}`;
-  $("#titre").textContent = titre(c.libelle.replace(/^R\d+C\d+\s+/, ""));
+  const nom = titre(c.libelle.replace(/^R\d+C\d+\s+/, "")), r = rc.match(/R(\d+)C(\d+)/) || [];
+  $("#surtitre").textContent = `Quinté+ PMU'B · ${jour}`;
+  $("#titre").textContent = "Le Quinté du jour";
+  $("#nom-course").innerHTML = `<b>${esc(nom)}</b> <span>· nom officiel de la course${r.length ? `, réunion ${r[1]} course ${r[2]}` : ""} à ${esc(titre(c.hippodrome))}</span>`;
   $("#puces").innerHTML = [`<b>${esc(titre(c.hippodrome))}</b>`, esc(c.discipline), c.distance ? `${fr(c.distance)} m` : "", `${c.partants} partants`,
     c.non_partants && c.non_partants.length ? `NP : ${c.non_partants.join(", ")}` : "", c.allocation ? `${fr(c.allocation)} €` : "",
     `Pari du jour : <b>${esc(PARI[etat.pari] || etat.pari)}</b>`].filter(Boolean).map((x) => `<span>${x}</span>`).join("");
-  document.title = `${titre(c.libelle.replace(/^R\d+C\d+\s+/, ""))} — Lab PMU'B en direct`;
+  document.title = `Le Quinté du jour (${nom}) — Lab PMU'B en direct`;
+}
+
+function dans(cible) {
+  const m = Math.round((cible - new Date()) / 60000);
+  if (m <= 0) return "maintenant";
+  return m < 60 ? `dans ${m} min` : `dans ${Math.floor(m / 60)} h ${String(m % 60).padStart(2, "0")}`;
 }
 
 function etapes() {
   if (!etat || !etat.course) return;
-  const {dep, arret, photo} = moments(), now = new Date();
-  const E = [["Programme", "dès 9 h", true], ["Journal LONAB", (etat.journal || "").startsWith("JH_") ? "lu" : "en attente", (etat.journal || "").startsWith("JH_")],
-    ["Photo", etat.photo || hm(photo), !!etat.photo || now >= new Date(photo.getTime() + 17 * 60000)], ["Arrêt des jeux", hm(arret), now >= arret],
-    ["Départ", hm(dep), now >= dep], ["Résultat", etat.resultat ? "officiel" : "fiche LONAB", !!etat.resultat]];
-  const k = E.findIndex((e) => !e[2]);
+  const {dep, arret, photo} = moments(), now = new Date(), journal = (etat.journal || "").startsWith("JH_");
+  const E = [
+    {nom: "Programme publié", quand: "dès 9 h", fait: true, cible: null, sens: ""},
+    {nom: "Journal LONAB lu", quand: journal ? "cotes et pronostics" : "en attente", fait: journal, cible: null,
+     sens: "Le lab attend le journal hippique LONAB du jour pour lire les cotes de presse et les pronostics."},
+    {nom: "Tickets figés", quand: etat.photo ? "à " + etat.photo : "vers " + hm(photo), fait: !!etat.photo || now >= new Date(photo.getTime() + 17 * 60000), cible: photo,
+     sens: "À cette heure, le lab fige ses pronostics pour le suivi : ils ne bougeront plus jusqu'à l'arrivée."},
+    {nom: "Fin des paris au Burkina", quand: hm(arret), fait: now >= arret, cible: arret, sens: "Après cette heure, on ne peut plus jouer au PMU'B."},
+    {nom: "Départ de la course", quand: hm(dep), fait: now >= dep, cible: dep, sens: "La course part en France ; l'arrivée tombe quelques minutes après."},
+    {nom: "Résultat officiel", quand: etat.resultat ? "publié" : "fiche LONAB", fait: !!etat.resultat, cible: null,
+     sens: "Le lab attend la fiche officielle de la LONAB pour vérifier l'arrivée et compter les gains."}];
+  const k = E.findIndex((e) => !e.fait), x = E[k];
+  const phrase = k < 0 ? "Journée terminée : le résultat officiel est publié."
+    : `<b>Prochaine étape : ${esc(x.nom.toLowerCase())}</b>${x.cible ? `, ${esc(x.quand)} (${dans(x.cible)})` : ""}. ${esc(x.sens)}`;
   const html = `<span class="rail" style="--rail:${k < 0 ? 100 : Math.max(0, (k - 0.5) / (E.length - 1) * 100).toFixed(1)}%"></span>` +
-    E.map((e, i) => `<li class="${e[2] ? "fait" : i === k ? "encours" : ""}">${e[0]}<small>${esc(e[1])}</small></li>`).join("");
+    E.map((e, i) => `<li class="${e.fait ? "fait" : i === k ? "encours" : ""}">${esc(e.nom)}<small>${esc(e.quand)}</small></li>`).join("");
   if ($("#etapes").dataset.html !== html) { $("#etapes").innerHTML = html; $("#etapes").dataset.html = html; }
+  if ($("#deroule-phrase").innerHTML !== phrase) $("#deroule-phrase").innerHTML = phrase;
 }
 
 function coupon() {
@@ -562,15 +591,15 @@ function tuiles() {
   const pos = (v) => Math.max(0, Math.min(100, (v - 2) / 12 * 100));
   if (!$("#tuile-arret")) {
     $("#tuiles").innerHTML =
-      `<div class="tuile" id="tuile-arret"><div class="etiq"><span>Arrêt des jeux PMU'B</span><span id="h-arret"></span></div><div class="val chrono" id="t-arret">—</div><div class="progres"><span id="p-arret"></span></div></div>` +
-      `<div class="tuile"><div class="etiq"><span>Photo officielle</span><span id="h-photo"></span></div><div class="val chrono" id="t-photo">—</div><div class="sous" id="s-photo"></div></div>` +
+      `<div class="tuile" id="tuile-arret"><div class="etiq"><span>Fin des paris dans</span><span id="h-arret"></span></div><div class="val chrono" id="t-arret">—</div><div class="progres"><span id="p-arret"></span></div></div>` +
+      `<div class="tuile"><div class="etiq"><span>Tickets figés dans</span><span id="h-photo"></span></div><div class="val chrono" id="t-photo">—</div><div class="sous" id="s-photo"></div></div>` +
       `<div class="tuile"><div class="etiq"><span>Chance du favori</span><span id="n-fav"></span></div><div class="val" id="v-fav">—</div><div class="sous">repère des Quintés : ${pct(REPERES.favori)}</div></div>` +
       `<div class="tuile"><div class="etiq"><span>Ouverture</span><span id="o-lib"></span></div><div class="val"><span id="v-neff">—</span> <small style="font-size:13px;font-weight:500;color:var(--texte-3)">concurrents réels</small></div>` +
       `<div class="jauge" title="Zone : la moitié des Quintés 2022-2026"><div class="zone" style="left:${pos(R.p25)}%;width:${pos(R.p75) - pos(R.p25)}%"></div><div class="repere" id="r-neff"></div></div><div class="jauge-legende"><span>fermée</span><span>ouverte</span></div></div>`;
   }
   $("#h-arret").textContent = etat.course.arret; $("#h-photo").textContent = etat.photo || hm(photo);
-  $("#s-photo").textContent = etat.photo ? "tickets figés et signés" : "fige les tickets du suivi";
-  if (etat.photo) $("#t-photo").textContent = "Prise";
+  $("#s-photo").textContent = etat.photo ? "pronostics figés pour le suivi" : "le lab fige alors ses pronostics";
+  if (etat.photo) $("#t-photo").textContent = "Figés";
   $("#n-fav").textContent = `n° ${f.num}`;
   compter($("#v-fav"), f.p, (x) => pct(x));
   compter($("#v-neff"), a.neff, (x) => virg(x, 1));
@@ -581,7 +610,7 @@ function tuiles() {
 
 function fil() {
   const L = (etat.fil || []).slice().reverse(), vus = new Set((avant && avant.fil || []).map((f) => f.texte));
-  const G = {programme: "Programme", journal: "Journal LONAB", favori: "Favori", couple: "Couplé", cote: "Cotes", non_partant: "Non-partant", photo: "Photo officielle", arrivee: "Arrivée"};
+  const G = {programme: "Programme", journal: "Journal LONAB", favori: "Favori", couple: "Couplé", cote: "Cotes", non_partant: "Non-partant", photo: "Tickets figés", arrivee: "Arrivée"};
   $("#fil").innerHTML = L.length ? L.map((f) => `<li class="${esc(f.genre)}${avant && !vus.has(f.texte) ? " neuf" : ""}"><span class="h">${esc(f.t)}</span><div><span class="g">${esc(G[f.genre] || f.genre)}</span><br>${esc(f.texte)}</div></li>`).join("")
     : `<li><span class="h"></span><div class="discret">Le fil se remplit au fil de la journée : favori, mouvements de cotes, photo, arrivée.</div></li>`;
   $("#fil-note").textContent = L.length ? `${L.length} événement${L.length > 1 ? "s" : ""} aujourd'hui` : "";
