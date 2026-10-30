@@ -547,6 +547,17 @@ const SOURCE = document.querySelector('meta[name="pmub-source"]')?.content || "/
 const PUBLIC = SOURCE !== "/api/etat";
 const PERIODE = 5;  // secondes entre deux lectures de l'état ; le direct de la course est relu toutes les 3 s
 const SOURCE_LIVE = PUBLIC ? SOURCE.replace(/etat\.json$/, "live.json") : "/api/live";
+// version publique servie par le VPS : la copie GitHub n'est lue que si le VPS ne répond pas
+const SECOURS = document.querySelector('meta[name="pmub-secours"]')?.content || "";
+const SECOURS_LIVE = SECOURS.replace(/etat\.json$/, "live.json");
+async function lire(url, secours) {
+  const un = async (u) => {
+    const r = await fetch(PUBLIC ? `${u}?t=${Date.now()}` : u, {cache: "no-store", signal: AbortSignal.timeout ? AbortSignal.timeout(4000) : undefined});
+    if (!r.ok) throw new Error(r.status);
+    return r.json();
+  };
+  try { return await un(url); } catch (e) { if (!secours) throw e; return un(secours); }
+}
 let live = null, demoDepart = null;
 let etat = null, avant = null, prochaine = Date.now() + PERIODE * 1000, premier = true;
 const ouverts = new Set();
@@ -919,9 +930,7 @@ function enCourse() {
 
 async function chargerLive() {
   try {
-    const r = await fetch(PUBLIC ? `${SOURCE_LIVE}?t=${Date.now()}` : SOURCE_LIVE, {cache: "no-store"});
-    if (!r.ok) return;
-    const n = await r.json(), cotesAvant = JSON.stringify(live && live.cotes), arrAvant = JSON.stringify(live && live.arrivee);
+    const n = await lire(SOURCE_LIVE, SECOURS_LIVE), cotesAvant = JSON.stringify(live && live.cotes), arrAvant = JSON.stringify(live && live.arrivee);
     live = n;
     fusion(); courseDirect(); etatDirect();
     if (JSON.stringify(n.cotes) !== cotesAvant) { chevaux(); argent(); }
@@ -1082,7 +1091,7 @@ function rendre() {
   $("#calibration").innerHTML = CALIB.map((c) => `<tr><td>${c[0]}</td><td class="n col-tel">${fr(c[1])}</td><td class="n">${virg(c[2], 1)} %</td><td class="n"><b>${virg(c[3], 1)} %</b></td></tr>`).join("");
   $("#empreinte").innerHTML = `Modèle figé : <span class="mono">${esc((etat.sha || "").slice(0, 16))}</span> · règles : <span class="mono">PREENREGISTREMENT_P6.md</span>`;
   $("#pied").innerHTML = `<span>Lab PMU'B · données PMU et LONAB</span><span>Journal : ${esc(etat.journal || "—")}</span>` +
-    (PUBLIC ? `<span>Actualisé toutes les 5 minutes de 9 h à 22 h (heure de Ouaga)</span>` : `<span>Page locale, non joignable depuis Internet</span>` +
+    (PUBLIC ? `<span>Relu toutes les 5 s, toutes les 3 s pendant la course</span>` : `<span>Page locale, non joignable depuis Internet</span>` +
       (etat.public ? `<span>Version à partager : <a href="${esc(etat.public)}" target="_blank" rel="noopener">${esc(etat.public)}</a></span>` : ""));
   if (avant && avant.maj !== etat.maj && !premier) {
     const n = (etat.fil || []).length - (avant.fil || []).length;
@@ -1106,9 +1115,7 @@ $("#chevaux").addEventListener("keydown", (ev) => {
 
 async function charger() {
   try {
-    const r = await fetch(PUBLIC ? `${SOURCE}?t=${Date.now()}` : SOURCE, {cache: "no-store"});
-    if (!r.ok) throw new Error(r.status);
-    const neuf = await r.json();
+    const neuf = await lire(SOURCE, SECOURS);
     if (neuf.demo_depart_dans != null) { demoDepart = demoDepart || Date.now() + neuf.demo_depart_dans * 1000; neuf.course.depart_utc = new Date(demoDepart).toISOString(); neuf.maj_utc = new Date().toISOString(); }
     if (etat && neuf.maj_utc === etat.maj_utc && !premier) { etatDirect(); return; }
     avant = etat; etat = neuf; fusion();
