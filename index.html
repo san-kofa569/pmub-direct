@@ -161,6 +161,15 @@ tr.place-arrivee td { background:var(--voile-1); }
 
 .demo { background:var(--attention); color:#2a1b00; text-align:center; font-weight:600; font-size:13px; padding:8px 16px; }
 
+.p8-grille { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:12px; }
+.p8-grille table td, .p8-grille table th { padding:6px 6px; }
+.mvt { display:grid; grid-template-columns:30px 1fr auto; gap:8px; align-items:center; padding:5px 0; border-bottom:1px solid var(--ligne); font-size:13px; }
+.mvt:last-child { border-bottom:0; }
+.mvt .fleche { font-variant-numeric:tabular-nums; font-weight:600; }
+.mvt .gp { font-size:10px; font-weight:600; letter-spacing:.06em; color:#fff; background:var(--grave); border-radius:3px; padding:0 5px; margin-left:6px; }
+.jauge-etude { height:6px; background:var(--surface-3); border-radius:3px; overflow:hidden; margin:4px 0 10px; }
+.jauge-etude span { display:block; height:100%; background:var(--serie-1); }
+
 /* ---------- tuiles ---------- */
 .tuiles { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:12px; margin-top:20px; }
 .tuile { background:var(--surface); border:1px solid var(--ligne); border-radius:10px; padding:14px 16px; min-width:0; }
@@ -322,7 +331,7 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
   .tuiles { grid-template-columns:repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width:860px) {
-  .tete, .methode, .detail-grille, .combis, .comp-grille { grid-template-columns:1fr; }
+  .tete, .methode, .detail-grille, .combis, .comp-grille, .p8-grille { grid-template-columns:1fr; }
   .combis .cg { grid-row:auto; }
   .tete .gauche { display:contents; }
   .tete > * , .tete .gauche > * { min-width:0; }
@@ -420,6 +429,15 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
       <div class="carte pad"><p class="petit-titre">Ce que le lab avait annoncé</p><ul class="verifs" id="comp-verifs"></ul>
         <p class="petit-titre" style="margin-top:14px">Les tickets du suivi papier</p><ul class="verifs" id="comp-suivi"></ul>
         <p class="note" id="comp-bilan"></p></div>
+    </div>
+  </section>
+
+  <section id="p8">
+    <div class="tete-section"><h2>L'argent de dernière minute</h2><p>Étude P8 : paris fictifs automatiques, chaque jour, sans aucun franc misé</p></div>
+    <div class="p8-grille">
+      <div class="carte pad"><p class="petit-titre" id="p8-titre-mvt">Les mouvements depuis H-30</p><div id="p8-mvt"></div></div>
+      <div class="carte pad"><p class="petit-titre">Les tickets fictifs du jour</p><div id="p8-tickets"></div></div>
+      <div class="carte pad"><p class="petit-titre">Où en est l'étude</p><div id="p8-bilan"></div></div>
     </div>
   </section>
 
@@ -917,7 +935,7 @@ async function chargerLive() {
     const n = await r.json(), cotesAvant = JSON.stringify(live && live.cotes), arrAvant = JSON.stringify(live && live.arrivee);
     live = n;
     fusion(); courseDirect(); etatDirect();
-    if (JSON.stringify(n.cotes) !== cotesAvant) chevaux();
+    if (JSON.stringify(n.cotes) !== cotesAvant) { chevaux(); argent(); }
     if (n.arrivee && JSON.stringify(n.arrivee) !== arrAvant) toast(`Arrivée ${n.definitive ? "officielle" : "provisoire"} : ${n.arrivee.join(" - ")}`);
   } catch (e) { /* réseau : nouvel essai dans 3 s */ }
 }
@@ -1003,6 +1021,42 @@ function jours() {
   }).join("");
 }
 
+function argent() {
+  const P = etat.p8 || {}, J = P.jour, B = P.bilan || {}, noms = Object.fromEntries((etat.chevaux || []).map((x) => [String(x.num), titre(x.nom)]));
+  // 1. les mouvements : en direct (live) depuis la cote H-30, sinon ceux de la photo
+  let c30 = null, cnow = null, gp = [], quand = "";
+  if (live && live.actif && live.cotes_30 && live.cotes) { c30 = live.cotes_30; cnow = live.cotes; gp = live.grosses_prises || []; quand = "en direct, depuis la cote de H-30"; }
+  else if (J && J.cotes_30 && J.cotes_11) { c30 = J.cotes_30; cnow = J.cotes_11; gp = J.grosses_prises || []; quand = "entre H-30 et H-11 (photo)"; }
+  if (c30) {
+    const M = Object.keys(c30).filter((n) => c30[n] && cnow[n]).map((n) => ({n, a: c30[n], b: cnow[n], m: Math.log(cnow[n] / c30[n])})).sort((x, y) => x.m - y.m);
+    const ligne = (x) => `<div class="mvt"><span class="numero">${x.n}</span><span>${esc(noms[x.n] || "")}${gp.includes(Number(x.n)) ? `<span class="gp">GROSSE PRISE</span>` : ""}</span>` +
+      `<span class="fleche"><span class="tri ${x.m < 0 ? "cote-baisse" : "cote-monte"}"></span>${virg(x.a)} → ${virg(x.b)} (${x.m < 0 ? "−" : "+"}${Math.round(100 * Math.abs(Math.exp(x.m) - 1))} %)</span></div>`;
+    $("#p8-titre-mvt").textContent = `Les mouvements ${quand}`;
+    $("#p8-mvt").innerHTML = `<p class="note" style="margin:0 0 6px">L'argent arrive (cote qui baisse) :</p>` + M.slice(0, 3).map(ligne).join("") +
+      `<p class="note" style="margin:10px 0 6px">L'argent repart (cote qui monte) :</p>` + M.slice(-3).reverse().map(ligne).join("");
+  } else {
+    $("#p8-mvt").innerHTML = `<p class="note" style="margin:0">Les cotes sont enregistrées toutes les 5 secondes à partir d'une heure avant le départ. Les mouvements s'affichent ici dès 30 minutes avant.</p>`;
+  }
+  // 2. les tickets fictifs
+  const lib = {L1: "L1 · couplé gagnant : les 2 plus fortes baisses du top 6", L2: "L2 · couplé gagnant : le favori + la plus forte baisse", L3: "L3 · couplé placé : les 2 plus fortes baisses", T: "T · témoin : les 2 favoris à H-11"};
+  if (J && J.tickets) {
+    const g = (J.resultat || {}).gains;
+    $("#p8-tickets").innerHTML = `<ul class="verifs">` + Object.keys(lib).map((k) => `<li class="${g ? (g[k] > 0 && g[k] !== 500 ? "ok" : "ko") : ""}"><i>${g ? (g[k] > 0 && g[k] !== 500 ? "✓" : "✗") : "•"}</i><span>${lib[k]}</span><b>${J.tickets[k].join("-")}</b><em>${g ? fr(g[k]) + " F" : ""}</em></li>`).join("") + `</ul>` +
+      `<p class="note">Figés à ${esc((J.enregistre_utc || "").slice(11, 16).replace(":", " h "))}, avant la fin des paris PMU'B${J.comptee ? "" : " (essai du système, hors compte)"}. ` +
+      (J.resultat ? `Borne haute du jour (avec la cote finale) : ${J.resultat.borne_haute.ticket ? J.resultat.borne_haute.ticket.join("-") : "—"}${J.resultat.part_mouvement != null ? ` ; part du mouvement déjà faite à H-11 : ${pct(J.resultat.part_mouvement, 0)}` : ""}.` : "Gains : dès la fiche LONAB.") + `</p>`;
+  } else if (J && J.statut === "manquée") {
+    $("#p8-tickets").innerHTML = `<p class="note" style="margin:0">Course manquée : ${esc(J.raison)}. Elle ne se rattrape jamais.</p>`;
+  } else {
+    $("#p8-tickets").innerHTML = `<p class="note" style="margin:0">Le lab écrira ses 4 tickets fictifs entre H-11 et H-10${etat.course && etat.mode === "jour" ? ` (vers ${esc(hm(new Date(moments().dep - 11 * 60000)))})` : ""}, avant la fin des paris au Burkina, à partir des mouvements de cote depuis H-30.</p>` +
+      `<ul class="verifs">` + Object.values(lib).map((x) => `<li><i>•</i><span>${x}</span><b>—</b><em></em></li>`).join("") + `</ul>`;
+  }
+  // 3. l'étude
+  const n = B.courses || 0, R = (k) => (B[k] || {}).R;
+  $("#p8-bilan").innerHTML = `<p style="margin:0">Courses comptées : <b>${n}</b> (test des cotes à 150, verdict des tickets à 250)</p><div class="jauge-etude"><span style="width:${Math.min(100, 100 * n / 250).toFixed(1)}%"></span></div>` +
+    `<table><tbody>` + ["L1", "L2", "L3", "T"].map((k) => `<tr><td>${k}</td><td class="n">${R(k) == null ? "—" : virg(R(k), 2)}</td><td class="n discret">${(B[k] || {}).touches || 0} touché${((B[k] || {}).touches || 0) > 1 ? "s" : ""}</td></tr>`).join("") + `</tbody></table>` +
+    `<p class="note">Rendu pour 1 F misé (1,00 = on récupère sa mise). Sur le passé, la même idée avec la cote finale (non jouable : connue après la fin des paris) aurait rendu 1,27 ; la question est ce qu'il en reste à H-11.</p>`;
+}
+
 function passes() {
   const L = ((etat.bilan || {}).liste || []);
   $("#passes").hidden = !L.length;
@@ -1034,7 +1088,7 @@ function rendre() {
     $("#puces").innerHTML = `<span>${esc(etat && etat.vide ? etat.vide : "Pas encore de données.")}</span>`;
     return;
   }
-  passes(); entete(); etapes(); courseDirect(); coupon(); tuiles(); comparaison(); fil(); lecture(); chevaux(); combis(); tickets(); resultat(); signaux(); jours(); dernier();
+  passes(); entete(); etapes(); courseDirect(); argent(); coupon(); tuiles(); comparaison(); fil(); lecture(); chevaux(); combis(); tickets(); resultat(); signaux(); jours(); dernier();
   if (premier || (avant && avant.maj !== etat.maj)) courbe(premier);
   $("#calibration").innerHTML = CALIB.map((c) => `<tr><td>${c[0]}</td><td class="n col-tel">${fr(c[1])}</td><td class="n">${virg(c[2], 1)} %</td><td class="n"><b>${virg(c[3], 1)} %</b></td></tr>`).join("");
   $("#empreinte").innerHTML = `Modèle figé : <span class="mono">${esc((etat.sha || "").slice(0, 16))}</span> · règles : <span class="mono">PREENREGISTREMENT_P6.md</span>`;
