@@ -390,7 +390,6 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
     <span class="direct neutre" id="direct"><i></i><span>Connexion</span></span>
     <span class="horloge" id="horloge" title="Heure de Ouagadougou"></span>
     <span class="anneau" id="anneau" title="Prochaine actualisation"></span>
-    <button class="bouton" id="partager" type="button" hidden>Partager</button>
     <button class="bouton" id="bouton-theme" type="button" title="Changer de thème : Clair ou Terre">Thème : Clair</button>
   </div>
 </div>
@@ -564,16 +563,6 @@ function poserTheme(t) {
 }
 $("#bouton-theme").addEventListener("click", () => { poserTheme(lireTheme() === "terre" ? "clair" : "terre"); if (etat && etat.chevaux) courbe(false); });
 poserTheme(lireTheme());
-
-/* ---------- partage (version publique) ---------- */
-if (PUBLIC) {
-  const b = $("#partager"); b.hidden = false;
-  b.addEventListener("click", async () => {
-    const donnees = {title: "Lab PMU'B — le Quinté en direct", text: "Le Quinté PMU'B du jour : chances et combinaisons les plus probables, en direct.", url: location.href.split("#")[0]};
-    try { if (navigator.share) { await navigator.share(donnees); return; } await navigator.clipboard.writeText(donnees.url); toast("Lien copié : collez-le dans WhatsApp ou un SMS."); }
-    catch (e) { /* partage annulé */ }
-  });
-}
 
 /* ---------- temps ---------- */
 const tps = (iso) => new Date(iso);
