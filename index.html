@@ -7,8 +7,13 @@
 <meta name="pmub-secours" content="https://raw.githubusercontent.com/san-kofa569/pmub-direct/donnees/etat.json">
 <meta name="theme-color" content="#14243b">
 <meta name="description" content="Le Quinté+ du PMU'B en direct : chances de chaque cheval et combinaisons les plus probables, calculées par le lab.">
-<title>Lab PMU'B — le Quinté en direct</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2314243b'/%3E%3Cpath d='M9.5 7.5v8.5a6.5 6.5 0 0 0 13 0V7.5' fill='none' stroke='%23e9edf3' stroke-width='3.4' stroke-linecap='round'/%3E%3C/svg%3E">
+<title>Lab PMU'B</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22%2314243b%22/%3E%3Cg transform=%22translate%289.6 9.2%29 scale%28.7%29%22%3E%3Cdefs%3E%3ClinearGradient id=%22io%22 x1=%2210%22 y1=%226%22 x2=%2254%22 y2=%2260%22 gradientUnits=%22userSpaceOnUse%22%3E%3Cstop offset=%220%22 stop-color=%22%23f4dc9b%22/%3E%3Cstop offset=%22.42%22 stop-color=%22%23d4a94f%22/%3E%3Cstop offset=%22.72%22 stop-color=%22%23a97a2c%22/%3E%3Cstop offset=%221%22 stop-color=%22%23e3c077%22/%3E%3C/linearGradient%3E%3ClinearGradient id=%22ic%22 x1=%2232%22 y1=%226%22 x2=%2232%22 y2=%2260%22 gradientUnits=%22userSpaceOnUse%22%3E%3Cstop offset=%220%22 stop-color=%22%23fff3cf%22/%3E%3Cstop offset=%221%22 stop-color=%22%238f6722%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d=%22M18.2 6.5C11.4 12.2 5.5 21.6 5.5 33.2 5.5 48.6 17.2 59.5 32 59.5S58.5 48.6 58.5 33.2C58.5 21.6 52.6 12.2 45.8 6.5L38.9 6.5C38.2 6.5 37.8 7.3 38.3 7.8 43.4 13.6 47.3 22.4 47.3 32.2 47.3 41.6 40.9 48.8 32 48.8S16.7 41.6 16.7 32.2C16.7 22.4 20.6 13.6 25.7 7.8 26.2 7.3 25.8 6.5 25.1 6.5Z%22 fill=%22url%28%23io%29%22 stroke=%22url%28%23ic%29%22 stroke-width=%22.7%22 stroke-linejoin=%22round%22/%3E%3C/g%3E%3C/svg%3E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icones/icone-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Lab PMU'B">
 <style>
 @font-face { font-family:"Plex Sans"; src:url("polices/ibm-plex-sans-latin-400-normal.woff2") format("woff2"); font-weight:400; font-display:swap; }
 @font-face { font-family:"Plex Sans"; src:url("polices/ibm-plex-sans-latin-500-normal.woff2") format("woff2"); font-weight:500; font-display:swap; }
@@ -33,7 +38,7 @@
 }
 
 * { box-sizing:border-box; }
-html { -webkit-text-size-adjust:100%; scroll-behavior:smooth; scroll-padding-top:64px; }
+html { -webkit-text-size-adjust:100%; scroll-behavior:smooth; scroll-padding-top:128px; }
 body { margin:0; background:var(--fond); color:var(--texte); font:400 14px/1.5 "Plex Sans", "Segoe UI", system-ui, sans-serif; padding-bottom:env(safe-area-inset-bottom); }
 .num, td.n, th.n { font-variant-numeric:tabular-nums; }
 a { color:inherit; text-underline-offset:2px; }
@@ -45,7 +50,7 @@ button { font:inherit; color:inherit; }
 .barre-haut { position:sticky; top:0; z-index:20; background:var(--marine); color:var(--marine-texte); box-shadow:0 1px 0 #ffffff10; }
 .barre-haut .int { max-width:1240px; margin:0 auto; padding:9px 20px; display:flex; align-items:center; gap:14px; }
 .logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
-.logo svg { width:26px; height:26px; flex:none; }
+.logo svg { width:30px; height:30px; flex:none; }
 .logo b { font-weight:600; letter-spacing:.14em; font-size:12px; text-transform:uppercase; }
 .logo span { font-size:11.5px; opacity:.62; letter-spacing:.04em; }
 .barre-haut .droite { margin-left:auto; display:flex; align-items:center; gap:12px; font-size:12.5px; }
@@ -148,6 +153,17 @@ h1 { font-family:"Source Serif", Georgia, serif; font-weight:600; font-size:40px
 .course-direct .cd-frais { margin-top:8px; font-size:11.5px; opacity:.6; font-variant-numeric:tabular-nums; }
 .comp-grille { display:grid; grid-template-columns:minmax(0, 1.5fr) minmax(0, 1fr); gap:12px; }
 .comp-tete { margin:0 0 10px; font-size:14.5px; color:var(--texte-2); }
+.lots { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px; }
+.lot-nums { display:flex; flex-wrap:wrap; gap:4px; margin:8px 0 12px; }
+.lot-coupons { list-style:none; margin:0; padding:0; font-size:14px; font-variant-numeric:tabular-nums; }
+.lot-coupons li { display:flex; justify-content:space-between; gap:8px; padding:5px 0; border-bottom:1px solid var(--ligne); }
+.lot-coupons li:last-child { border-bottom:0; }
+.lot-coupons em { font-style:normal; font-size:12px; color:var(--texte-3); }
+.lot-chiffres { margin:10px 0 0; font-size:13px; color:var(--texte-2); }
+.lot-chiffres b { color:var(--texte); }
+.large-tout { grid-column:1 / -1; }
+#apprend { grid-template-columns:minmax(0, 1fr) minmax(0, 1fr); }
+@media (max-width:860px) { #apprend { grid-template-columns:minmax(0, 1fr); } }
 .comp-tete b { color:var(--texte); }
 .verifs { list-style:none; margin:0; padding:0; }
 .verifs li { display:grid; grid-template-columns:18px 1fr auto auto; gap:8px; align-items:center; padding:6px 0; border-bottom:1px solid var(--ligne); font-size:13px; }
@@ -323,9 +339,17 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
 /* toast */
 .toast { position:fixed; left:50%; bottom:22px; transform:translate(-50%, 140%); background:var(--marine); color:var(--marine-texte); padding:10px 16px; border-radius:10px; font-size:13px; box-shadow:0 10px 30px #00000040; transition:transform .35s cubic-bezier(.2,.8,.2,1); z-index:30; max-width:calc(100vw - 32px); }
 .toast.vu { transform:translate(-50%, 0); }
+.toast:not(.vu) { visibility:hidden; }
 
 /* navigation de poche (téléphone) */
-.poche { display:none; }
+.onglets { background:var(--surface); border-bottom:1px solid var(--ligne); }
+.onglets .int { max-width:1240px; margin:0 auto; padding:0 20px; display:flex; gap:4px; }
+.onglets a { display:flex; align-items:center; gap:7px; padding:11px 14px; color:var(--texte-2); text-decoration:none; font-size:14px; font-weight:500; border-bottom:2px solid transparent; margin-bottom:-1px; }
+.onglets a:hover { color:var(--texte); }
+.onglets a[aria-current="page"] { color:var(--texte); border-bottom-color:#b98a35; font-weight:600; }
+.onglets svg { width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; flex:none; }
+.vue > section:first-child, .vue > .tete:first-child, .vue > section:not([hidden]):not(section:not([hidden]) ~ section) { margin-top:0; }
+#appris { margin:12px 0 0; }
 
 @media (max-width:1100px) {
   .colonnes { grid-template-columns:1fr; }
@@ -347,7 +371,6 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
   main, .barre-haut .int, footer { padding-left:16px; padding-right:16px; }
   .barre-haut .int { gap:10px; }
   .horloge, .anneau { display:none; }
-  @media (max-width:420px) { .logo b { display:none; } }
   .logo b { letter-spacing:.08em; font-size:11.5px; }
   .barre-haut .bouton { padding:4px 8px; font-size:11.5px; }
   .direct { white-space:nowrap; letter-spacing:.05em; }
@@ -369,22 +392,26 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
   #chevaux-section .etiquettes span:not(:first-child) { display:none; }
   #chevaux-section .numero { min-width:26px; height:24px; }
   .bandeau-fil a { display:none; }
-  .poche { display:flex; position:fixed; z-index:25; left:12px; right:12px; bottom:calc(10px + env(safe-area-inset-bottom)); background:var(--marine); border-radius:14px; box-shadow:0 10px 30px #00000040; padding:6px; justify-content:space-around; }
-  .poche a { color:var(--marine-texte); text-decoration:none; font-size:11.5px; font-weight:500; padding:7px 7px; border-radius:9px; letter-spacing:.02em; }
-  .poche a:active { background:#ffffff1a; }
+  .onglets { position:fixed; top:auto; left:0; right:0; bottom:0; z-index:25; border-bottom:0; border-top:1px solid var(--ligne); padding-bottom:env(safe-area-inset-bottom); box-shadow:0 -6px 18px #0000000f; }
+  .onglets .int { padding:0; gap:0; }
+  .onglets a { flex:1 1 0; min-width:0; flex-direction:column; gap:3px; padding:8px 2px 7px; font-size:11px; border-bottom:0; border-top:2px solid transparent; margin:-1px 0 0; }
+  .onglets a[aria-current="page"] { border-top-color:#b98a35; }
+  .onglets svg { width:21px; height:21px; }
+  main { padding-bottom:calc(84px + env(safe-area-inset-bottom)); }
   .toast { bottom:80px; }
+  html { scroll-padding-top:96px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation:none !important; transition:none !important; }
   html { scroll-behavior:auto; }
 }
-@media print { .barre-haut, .poche, .toast { display:none; } body { background:#fff; } }
+@media print { .barre-haut, .onglets, .toast { display:none; } body { background:#fff; } }
 </style>
 </head>
 <body>
 <header class="barre-haut"><div class="int">
-  <a class="logo" href="#haut" aria-label="Lab PMU'B">
-    <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#ffffff17"/><path d="M9.5 7.5v8.5a6.5 6.5 0 0 0 13 0V7.5" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/><g fill="var(--marine)"><circle cx="9.5" cy="10.5" r="0.95"/><circle cx="9.5" cy="15" r="0.95"/><circle cx="22.5" cy="10.5" r="0.95"/><circle cx="22.5" cy="15" r="0.95"/><circle cx="12.4" cy="20.6" r="0.95"/><circle cx="19.6" cy="20.6" r="0.95"/></g></svg>
+  <a class="logo" href="#vue-aujourdhui" aria-label="Lab PMU'B, retour à Aujourd'hui">
+    <svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="logoo" x1="10" y1="6" x2="54" y2="60" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f4dc9b"/><stop offset=".42" stop-color="#d4a94f"/><stop offset=".72" stop-color="#a97a2c"/><stop offset="1" stop-color="#e3c077"/></linearGradient><linearGradient id="logoc" x1="32" y1="6" x2="32" y2="60" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff3cf"/><stop offset="1" stop-color="#8f6722"/></linearGradient></defs><path d="M18.2 6.5C11.4 12.2 5.5 21.6 5.5 33.2 5.5 48.6 17.2 59.5 32 59.5S58.5 48.6 58.5 33.2C58.5 21.6 52.6 12.2 45.8 6.5L38.9 6.5C38.2 6.5 37.8 7.3 38.3 7.8 43.4 13.6 47.3 22.4 47.3 32.2 47.3 41.6 40.9 48.8 32 48.8S16.7 41.6 16.7 32.2C16.7 22.4 20.6 13.6 25.7 7.8 26.2 7.3 25.8 6.5 25.1 6.5Z" fill="url(#logoo)" stroke="url(#logoc)" stroke-width=".7" stroke-linejoin="round"/><path d="M21.7 11.9C15.8 18 11.6 25.5 11.6 33.2 11.6 44.9 20.8 54.2 32 54.2S52.4 44.9 52.4 33.2C52.4 25.5 48.2 18 42.3 11.9" fill="none" stroke="#7a5518" stroke-opacity=".62" stroke-width="2.5" stroke-linecap="round"/><path d="M21.7 11.9C15.8 18 11.6 25.5 11.6 33.2 11.6 44.9 20.8 54.2 32 54.2S52.4 44.9 52.4 33.2C52.4 25.5 48.2 18 42.3 11.9" fill="none" stroke="#fff0c4" stroke-opacity=".5" stroke-width=".5" stroke-linecap="round" transform="translate(.5 .55)"/><rect x="22.01" y="51.43" width="3.4" height="1.9" rx=".55" transform="rotate(23.6 23.71 52.38)" fill="#3d2a0c"/><rect x="38.59" y="51.43" width="3.4" height="1.9" rx=".55" transform="rotate(-23.6 40.29 52.38)" fill="#3d2a0c"/><rect x="12.24" y="42.88" width="3.4" height="1.9" rx=".55" transform="rotate(58.2 13.94 43.83)" fill="#3d2a0c"/><rect x="48.36" y="42.88" width="3.4" height="1.9" rx=".55" transform="rotate(-58.2 50.06 43.83)" fill="#3d2a0c"/><rect x="8.59" y="30.65" width="3.4" height="1.9" rx=".55" transform="rotate(91.5 10.29 31.6)" fill="#3d2a0c"/><rect x="52.01" y="30.65" width="3.4" height="1.9" rx=".55" transform="rotate(-91.5 53.71 31.6)" fill="#3d2a0c"/><rect x="11.51" y="19.26" width="3.4" height="1.9" rx=".55" transform="rotate(122.0 13.21 20.21)" fill="#3d2a0c"/><rect x="49.09" y="19.26" width="3.4" height="1.9" rx=".55" transform="rotate(-122.0 50.79 20.21)" fill="#3d2a0c"/></svg>
     <b>Lab PMU'B</b><span>Le Quinté en direct</span>
   </a>
   <div class="droite">
@@ -395,11 +422,13 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
   </div>
 </div>
   <div class="bandeau-fil" id="bandeau-fil" hidden><div class="int"><span class="h" id="bf-h"></span><span id="bf-t"></span><a href="#fil-section">Tout le fil</a></div></div>
+<nav class="onglets" id="onglets" aria-label="Pages de l'application"><div class="int"><a href="#vue-aujourdhui" data-cible="aujourdhui"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V4m0 1h13l-3 4 3 4H4"/></svg><span>Aujourd'hui</span></a><a href="#vue-chevaux" data-cible="chevaux"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4C4.8 6.5 3.5 9.4 3.5 12.6 3.5 17.7 7.3 21 12 21s8.5-3.3 8.5-8.4c0-3.2-1.3-6.1-3.5-8.6M9.6 4.9c-1.4 2.2-2.2 4.8-2.2 7.5 0 2.9 2 5 4.6 5s4.6-2.1 4.6-5c0-2.7-.8-5.3-2.2-7.5"/></svg><span>Chevaux</span></a><a href="#vue-coupons" data-cible="coupons"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4zM14 6v2m0 3v2m0 3v2"/></svg><span>Coupons</span></a><a href="#vue-resultats" data-cible="resultats"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5v-7h4zm0 0v-12h6v12m0 0h4v-9h-4M12 3l1 2 2 .3-1.5 1.4.4 2.1L12 7.8l-1.9 1 .4-2.1L9 5.3l2-.3z"/></svg><span>Résultats</span></a><a href="#vue-infos" data-cible="infos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v14H4zM4 10h16M8 3v4m8-4v4"/></svg><span>Calendrier</span></a></div></nav>
 </header>
 
 <div class="demo" id="demo" hidden></div>
 <main id="haut">
-  <section class="course-direct" id="course-direct" hidden aria-live="polite"></section>
+  <div class="vue" data-vue="aujourdhui" id="vue-aujourdhui">
+<section class="course-direct" id="course-direct" hidden aria-live="polite"></section>
   <div class="tete" id="pronostic">
     <div class="gauche">
       <div class="surtitre" id="surtitre">&nbsp;</div>
@@ -412,17 +441,64 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
       <ol class="etapes" id="etapes"></ol>
       <div class="carte pad lecture-carte" id="lecture-carte"><p class="petit-titre">Lecture du jour</p><ol class="lecture" id="lecture"></ol></div>
     </div>
-    <div class="coupon" id="coupon"><div class="haut"><b>Le pronostic de la machine</b><span>chargement…</span></div></div>
+    <div class="coupon" id="coupon"><div class="haut"><b>Le pronostic du lab</b><span>chargement…</span></div></div>
   </div>
 
   <div class="tuiles" id="tuiles"></div>
 
+  <p class="note" id="appris" hidden></p>
 
-  <section id="comparaison" hidden>
+<section id="fil-section">
+      <div class="tete-section"><h2>Le fil du direct</h2><p id="fil-note"></p></div>
+      <div class="carte"><ol class="fil" id="fil"></ol></div>
+    </section>
+  </div>
+
+  <div class="vue" data-vue="chevaux" id="vue-chevaux" hidden>
+<section id="chevaux-section">
+        <div class="tete-section"><h2>Chances de victoire</h2><p>Touchez un cheval pour voir ce qui pèse sur sa chance</p></div>
+        <div class="carte">
+          <div class="defile"><table>
+            <thead><tr><th class="n col-tel">Rg</th><th>N°</th><th>Cheval</th><th>Chance de gagner</th><th class="col-option">Journée</th><th class="n">Dans les 3</th><th class="n col-option">Marché</th><th class="n col-option">Écart</th><th class="n col-tel">Cote PMU</th><th class="n col-option">Journal</th><th></th></tr></thead>
+            <tbody id="chevaux"></tbody>
+          </table></div>
+          <div class="legende-table"><span class="lm">Chance selon le lab</span><span class="lk">Chance selon le marché</span><span>Journée : la chance depuis le matin</span></div>
+        </div>
+  </section>
+
+<section>
+      <div class="tete-section"><h2>Évolution des chances</h2><p>Les six premiers du lab, à chaque actualisation</p></div>
+      <div class="carte graphique" id="graphique"></div>
+    </section>
+  </div>
+
+  <div class="vue" data-vue="coupons" id="vue-coupons" hidden>
+<section id="lot-section" hidden>
+    <div class="tete-section"><h2>Le lot du jour et les coupons au hasard</h2><p>Les chevaux les plus probables, puis des coupons tirés au sort dans ce lot, en plus du coupon du lab.</p></div>
+    <div class="lots" id="lots"></div>
+    <p class="note" id="lots-note"></p>
+  </section>
+
+<section id="combinaisons">
+    <div class="tete-section"><h2>Combinaisons les plus probables</h2><p>Rapport min. : rapport PMU'B sous lequel le ticket perd à la longue, si la chance annoncée est juste</p></div>
+    <div class="combis" id="combis"></div>
+  </section>
+
+  <section>
+    <div class="tete-section"><h2>Tickets du suivi papier</h2><p>Mise fictive ; tickets figés entre 28 et 11 minutes avant le départ</p></div>
+    <div class="carte"><div class="defile"><table>
+      <thead><tr><th>Méthode</th><th class="col-tel">Famille</th><th>Ticket</th><th>État</th></tr></thead>
+      <tbody id="tickets"></tbody>
+    </table></div></div>
+  </section>
+  </div>
+
+  <div class="vue" data-vue="resultats" id="vue-resultats" hidden>
+<section id="comparaison" hidden>
     <div class="tete-section"><h2>Le lab contre la course</h2><p id="comp-source"></p></div>
     <div class="comp-grille">
       <div class="carte pad"><p class="comp-tete" id="comp-tete"></p>
-        <div class="defile"><table><thead><tr><th>Place</th><th>N°</th><th>Cheval</th><th class="n">Choix de la machine</th><th class="n">Chance annoncée</th><th class="n col-tel">Marché</th><th class="n col-tel">Cote</th></tr></thead>
+        <div class="defile"><table><thead><tr><th>Place</th><th>N°</th><th>Cheval</th><th class="n">Choix du lab</th><th class="n">Chance annoncée</th><th class="n col-tel">Marché</th><th class="n col-tel">Cote</th></tr></thead>
         <tbody id="comp-chevaux"></tbody></table></div>
         <div id="comp-rapports"></div>
       </div>
@@ -432,7 +508,17 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
     </div>
   </section>
 
-  <section id="p8">
+<section id="bloc-resultat" hidden>
+    <div class="tete-section"><h2>Résultat</h2><p>Fiche officielle de la LONAB</p></div>
+    <div class="carte pad" id="resultat"></div>
+  </section>
+
+<section id="apprend-section" hidden>
+    <div class="tete-section"><h2>Le lab se compare et apprend</h2><p>Chaque résultat est mesuré contre le résultat général, sur 1 418 Quintés.</p></div>
+    <div class="lots" id="apprend"></div>
+  </section>
+
+<section id="p8">
     <div class="tete-section"><h2>L'argent de dernière minute</h2><p>Étude P8 : paris fictifs automatiques, chaque jour, sans aucun franc misé</p></div>
     <div class="p8-grille">
       <div class="carte pad"><p class="petit-titre" id="p8-titre-mvt">Les mouvements depuis H-30</p><div id="p8-mvt"></div></div>
@@ -440,56 +526,26 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
       <div class="carte pad"><p class="petit-titre">Où en est l'étude</p><div id="p8-bilan"></div></div>
     </div>
   </section>
-
-  <section id="chevaux-section">
-        <div class="tete-section"><h2>Chances de victoire</h2><p>Touchez un cheval pour voir ce qui pèse sur sa chance</p></div>
-        <div class="carte">
-          <div class="defile"><table>
-            <thead><tr><th class="n col-tel">Rg</th><th>N°</th><th>Cheval</th><th>Chance de gagner</th><th class="col-option">Journée</th><th class="n">Dans les 3</th><th class="n col-option">Marché</th><th class="n col-option">Écart</th><th class="n col-tel">Cote PMU</th><th class="n col-option">Journal</th><th></th></tr></thead>
-            <tbody id="chevaux"></tbody>
-          </table></div>
-          <div class="legende-table"><span class="lm">Chance selon la machine</span><span class="lk">Chance selon le marché</span><span>Journée : la chance depuis le matin</span></div>
-        </div>
-  </section>
-
-  <section id="combinaisons">
-    <div class="tete-section"><h2>Combinaisons les plus probables</h2><p>Rapport min. : rapport PMU'B sous lequel le ticket perd à la longue, si la chance annoncée est juste</p></div>
-    <div class="combis" id="combis"></div>
-  </section>
-
-  <div class="colonnes">
-    <section>
-      <div class="tete-section"><h2>Évolution des chances</h2><p>Les six premiers de la machine, à chaque actualisation</p></div>
-      <div class="carte graphique" id="graphique"></div>
-    </section>
-    <section id="fil-section">
-      <div class="tete-section"><h2>Le fil du direct</h2><p id="fil-note"></p></div>
-      <div class="carte"><ol class="fil" id="fil"></ol></div>
-    </section>
   </div>
 
-  <section>
-    <div class="tete-section"><h2>Tickets du suivi papier</h2><p>Mise fictive ; tickets figés entre 28 et 11 minutes avant le départ</p></div>
-    <div class="carte"><div class="defile"><table>
-      <thead><tr><th>Méthode</th><th class="col-tel">Famille</th><th>Ticket</th><th>État</th></tr></thead>
-      <tbody id="tickets"></tbody>
-    </table></div></div>
+  <div class="vue" data-vue="infos" id="vue-infos" hidden>
+<section id="jours-section">
+    <div class="tete-section"><h2>Calendrier des courses</h2><p>Le programme PMU (publié environ deux jours à l'avance) et les derniers Quintés suivis par le lab</p></div>
+    <div class="jours" id="jours"></div>
+    <div class="carte" id="passes" hidden style="margin-top:12px"><div class="defile"><table>
+      <thead><tr><th>Jour</th><th>Course</th><th>Arrivée</th><th>Le gagnant pour le lab</th><th class="n">Coupons du lab touchés</th></tr></thead>
+      <tbody id="passes-corps"></tbody></table></div></div>
   </section>
 
-  <section id="bloc-resultat" hidden>
-    <div class="tete-section"><h2>Résultat</h2><p>Fiche officielle de la LONAB</p></div>
-    <div class="carte pad" id="resultat"></div>
-  </section>
-
-  <section id="methode">
+<section id="methode">
     <div class="tete-section"><h2>Méthode et fiabilité</h2><p>Ce que valent ces chiffres</p></div>
     <div class="methode">
       <div class="carte pad">
-        <p><b>Ce que voit la machine.</b> La cote française de référence, la cote et l'encadré CLASSEMENT du journal hippique LONAB, les
+        <p><b>Ce que regarde le lab.</b> La cote française de référence, la cote et l'encadré CLASSEMENT du journal hippique LONAB, les
           pronostics de presse, la musique, le palmarès et les gains, le driver ou jockey et l'entraîneur, le recul, le poids, la corde, les fers.
-          Un modèle par course, appris sur 4 414 Quintés (2014-2026), figé le 30/10/2026.</p>
-        <p><b>Ce qu'elle vaut.</b> Sur 1 453 Quintés jamais vus (novembre 2022 → octobre 2026), ses chances sont justes (tableau ci-contre),
-          mais elle ne prévoit pas mieux que la cote : son favori gagne 24,4 % des courses, celui de la cote 24,3 %. Aucun ticket ne rend sa mise.</p>
+          Un modèle réappris après chaque course, sur tous les Quintés depuis 2014.</p>
+        <p><b>Ce qu'il vaut.</b> Sur 1 453 Quintés jamais vus (novembre 2022 → octobre 2026), ses chances sont justes (tableau ci-contre),
+          mais il ne prévoit pas mieux que la cote : son favori gagne 24,4 % des courses, celui de la cote 24,3 %. Aucun ticket ne rend sa mise.</p>
         <p><b>Le suivi.</b> Les tickets sont figés et horodatés chaque jour entre 28 et 11 minutes avant le départ, puis comparés à la fiche
           officielle de la LONAB. Verdict après 250 courses.</p>
         <p class="note" id="empreinte"></p>
@@ -504,20 +560,13 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
     </div>
   </section>
 
-  <section id="jours-section">
-    <div class="tete-section"><h2>Calendrier des courses</h2><p>Le programme PMU (publié environ deux jours à l'avance) et les derniers Quintés suivis par le lab</p></div>
-    <div class="jours" id="jours"></div>
-    <div class="carte" id="passes" hidden style="margin-top:12px"><div class="defile"><table>
-      <thead><tr><th>Jour</th><th>Course</th><th>Arrivée</th><th>Le gagnant chez la machine</th><th class="n">Coupons du lab touchés</th></tr></thead>
-      <tbody id="passes-corps"></tbody></table></div></div>
-  </section>
-
-  <div class="prudence"><b>Information, pas un conseil de jeu.</b> Le prélèvement du PMU'B est de 35 % : un ticket au hasard rend 50 à 60 F pour
-    100 misés, et aucune des 61 méthodes testées par le lab ne rend sa mise. Le plus probable n'est pas le plus rentable. Ne misez jamais plus
+<div class="prudence"><b>Information, pas un conseil de jeu.</b> Le prélèvement du PMU'B est de 35 % : un ticket au hasard rend 50 à 60 F pour
+    100 misés, et aucune des 64 méthodes testées par le lab ne rend sa mise. Le plus probable n'est pas le plus rentable. Ne misez jamais plus
     que ce que vous pouvez perdre.</div>
+  </div>
+
 </main>
 <footer id="pied"></footer>
-<nav class="poche" aria-label="Sections"><a href="#pronostic">Pronostic</a><a href="#p8">Argent</a><a href="#chevaux-section">Chevaux</a><a href="#combinaisons">Combis</a><a href="#fil-section">Direct</a></nav>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -671,7 +720,7 @@ function etapes() {
   const E = [
     {nom: "Programme publié", quand: "dès 9 h", fait: true, cible: null, sens: ""},
     {nom: "Cotes publiées", quand: etat.sans_cote ? "le matin de la course" : "chances chiffrées", fait: !etat.sans_cote, cible: null,
-     sens: "Le PMU publie les cotes le matin de la course : la machine passe alors du classement aux chances chiffrées."},
+     sens: "Le PMU publie les cotes le matin de la course : le lab passe alors du classement aux chances chiffrées."},
     {nom: "Journal LONAB lu", quand: journal ? "cotes et pronostics" : "en attente", fait: journal, cible: null,
      sens: "Le lab attend le journal hippique LONAB du jour pour lire les cotes de presse et les pronostics."},
     {nom: "Tickets figés", quand: etat.photo ? "à " + etat.photo : "vers " + hm(photo), fait: !!etat.photo || now >= new Date(photo.getTime() + 17 * 60000), cible: photo,
@@ -694,15 +743,15 @@ function coupon() {
   const ligne = (cle, etiq, choix, nom, chance, classe = "") => `<div class="l ${classe}" data-k="${cle}"><dt>${etiq}</dt><dd class="choix">${choix}</dd><div class="nom"><b>${nom}</b><span>${chance}</span></div></div>`;
   const fige = !!etat.photo, sc = !!etat.sans_cote;
   if (sc) {
-    $("#coupon").innerHTML = `<div class="haut"><div><b>Le classement de la machine</b><span>${esc(etat.maj ? "actualisé à " + etat.maj : "")}</span></div><span class="tampon">Sans les cotes</span></div><dl>` +
+    $("#coupon").innerHTML = `<div class="haut"><div><b>Le classement du lab</b><span>${esc(etat.maj ? "actualisé à " + etat.maj : "")}</span></div><span class="tampon">Sans les cotes</span></div><dl>` +
       ligne("g", "Premier choix", `n° ${f.num}`, esc(f.nom), "classement provisoire", "gagnant") +
       ligne("cg", "Couplé", cg.chevaux.join(" - "), "ses 2 premiers choix ensemble", "provisoire") +
       (ti ? ligne("ti", "Arrivée", ti.chevaux.join(" - "), "ses 3 premiers dans l'ordre", "provisoire") : "") +
       ligne("pj", `${esc(PARI[etat.pari] || etat.pari)}`, pj.chevaux.join(" - "), "sa meilleure combinaison", "provisoire") + `</dl>` +
-      `<div class="perfo"></div><p class="note" style="margin:0;padding:10px 18px 14px">Les cotes ne sont pas encore publiées : sans elles, la machine classe bien mais ses pourcentages seraient trop sûrs d'eux. Les chances chiffrées arrivent le matin de la course.</p>`;
+      `<div class="perfo"></div><p class="note" style="margin:0;padding:10px 18px 14px">Les cotes ne sont pas encore publiées : sans elles, le lab classe bien mais ses pourcentages seraient trop sûrs d'eux. Les chances chiffrées arrivent le matin de la course.</p>`;
     return;
   }
-  $("#coupon").innerHTML = `<div class="haut"><div><b>Le pronostic de la machine</b><span>${esc(etat.maj ? "actualisé à " + etat.maj : "")}</span></div>` +
+  $("#coupon").innerHTML = `<div class="haut"><div><b>Le pronostic du lab</b><span>${esc(etat.maj ? "actualisé à " + etat.maj : "")}</span></div>` +
     `<span class="tampon ${fige ? "fige" : ""}">${fige ? "Figé · " + esc(etat.photo) : "Provisoire"}</span></div>` +
     `<dl>` + ligne("g", "Gagnant", `n° ${f.num}`, esc(f.nom), `${pct(f.p)} · cote juste ${virg(1 / f.p, 1)}`, "gagnant") +
     ligne("cg", "Couplé gagnant", cg.chevaux.join(" - "), "les 2 premiers, dans n'importe quel ordre", `${pct(cg.p)} · 1 sur ${Math.round(cg.un_sur)}`) +
@@ -756,7 +805,7 @@ function lecture() {
   if (etat.sans_cote) {
     const w = (new Date(etat.date + "T12:00:00Z").getUTCDay() + 6) % 7;
     $("#lecture").innerHTML = [`Le ${JOURS[w]}, <b>${pct(SURPRISE[w], 0)}</b> des Quintés finissent en surprise (gros rapport du couplé), contre ${pct(SURPRISE_TOUS, 0)} tous jours confondus.`,
-      `Les cotes ne sont pas encore publiées : la machine donne un <b>classement provisoire</b>. Sans les cotes, ses pourcentages seraient trop sûrs d'eux (annoncé 50 %, réel 36 %) : ils ne sont pas affichés.`,
+      `Les cotes ne sont pas encore publiées : le lab donne un <b>classement provisoire</b>. Sans les cotes, ses pourcentages seraient trop sûrs d'eux (annoncé 50 %, réel 36 %) : ils ne sont pas affichés.`,
       `Les chances chiffrées, les combinaisons et les tickets arrivent le matin de la course, avec les cotes.`].map((x) => `<li>${x}</li>`).join("");
     return;
   }
@@ -764,7 +813,7 @@ function lecture() {
   L.push(`Course <b>${esc(a.ouverture)}</b> : <b>${virg(a.neff, 1)} concurrents réels</b> sur ${c.partants} partants (médiane des Quintés : ${virg(REPERES.neff.p50, 1)}).`);
   L.push(`Le favori, <b>n° ${f.num} ${esc(titre(f.nom))}</b>, gagne une course sur ${Math.round(1 / f.p)} et finit dans les 3 premiers ${pct(f.p3, 0)} du temps.`);
   L.push(`Les 4 premiers (${ch.slice(0, 4).map((x) => x.num).join(", ")}) gagnent ensemble <b>${pct(a.top4, 0)}</b> du temps ; le gagnant sort hors des 5 premiers <b>${pct(1 - a.top5, 0)}</b> du temps.`);
-  L.push(`La machine croit plus au <b>n° ${a.haut.x.num}</b> (+${virg(Math.abs(100 * a.haut.d), 1)} pt) et moins au <b>n° ${a.bas.x.num}</b> (−${virg(Math.abs(100 * a.bas.d), 1)} pt) que le marché ; ces écarts n'ont jamais été rentables.`);
+  L.push(`Le lab croit plus au <b>n° ${a.haut.x.num}</b> (+${virg(Math.abs(100 * a.haut.d), 1)} pt) et moins au <b>n° ${a.bas.x.num}</b> (−${virg(Math.abs(100 * a.bas.d), 1)} pt) que le marché ; ces écarts n'ont jamais été rentables.`);
   const w = (new Date(etat.date + "T12:00:00Z").getUTCDay() + 6) % 7, sw = SURPRISE[w];
   L.push(`Le ${JOURS[w]}, <b>${pct(sw, 0)}</b> des Quintés finissent en surprise (gros rapport du couplé), contre ${pct(SURPRISE_TOUS, 0)} tous jours confondus : ` +
     `le jour de la semaine dit quel genre de course on court${sw < SURPRISE_TOUS ? " (plus souvent du trot, favori plus net)" : " (plus souvent du plat ou de l'obstacle, favori moins net)"}. Vérifié sur 2015-2026 ; ça ne rapporte rien seul.`);
@@ -797,7 +846,7 @@ function chevaux() {
       `<td class="n rang col-tel">${i + 1}</td><td><span class="numero">${x.num}</span></td>` +
       `<td><div class="cheval">${esc(titre(x.nom))}</div>${x.journal.length ? `<div class="etiquettes">${x.journal.map((t) => `<span>${esc(t)}</span>`).join("")}</div>` : ""}</td>` +
       (etat.sans_cote ? `<td><span class="rang-txt">${i + 1}${i ? "e" : "er"} choix</span></td><td class="col-option"></td><td class="n">—</td><td class="n col-option">—</td><td class="n col-option">—</td>` :
-      `<td><div class="cellule-barre"><div class="barre" title="Machine ${pct(x.p)} · marché ${pct(x.p_cote_recal)}"><div class="fond"></div><div class="plein" style="width:${prec[x.num] ? W(prec[x.num].p) : (premier && !MOINS_DE_MOUVEMENT ? 0 : W(x.p))}%" data-w="${W(x.p)}"></div><div class="marche" style="left:calc(${W(x.p_cote_recal)}% - 1px)"></div></div><b data-num="${x.num}">${pct(x.p)}</b></div></td>` +
+      `<td><div class="cellule-barre"><div class="barre" title="Lab ${pct(x.p)} · marché ${pct(x.p_cote_recal)}"><div class="fond"></div><div class="plein" style="width:${prec[x.num] ? W(prec[x.num].p) : (premier && !MOINS_DE_MOUVEMENT ? 0 : W(x.p))}%" data-w="${W(x.p)}"></div><div class="marche" style="left:calc(${W(x.p_cote_recal)}% - 1px)"></div></div><b data-num="${x.num}">${pct(x.p)}</b></div></td>` +
       `<td class="col-option">${etincelle(x.num)}</td><td class="n">${pct(x.p3, 0)}</td><td class="n col-option">${pct(x.p_cote_recal)}</td><td class="n col-option">${ecart}</td>`) +
       `<td class="n col-tel"><span class="fleche">${fl}${virg(cote)}</span></td><td class="n col-option">${virg(x.cote_journal)}</td><td class="chevron"><span>›</span></td></tr>` +
       (ouvert ? `<tr class="detail"><td colspan="11">${detail(x)}</td></tr>` : "");
@@ -847,8 +896,8 @@ function champ() {
   const C = etat.champ; if (!C || !C.length) return "";
   const mise = MISE[etat.pari] || 300, k = C[0].n;
   const q = etat.pari === "4+1";
-  return `<div class="carte large"><h3>Jouer en champ réduit</h3><p class="sous">On prend les N chevaux que la machine classe en tête et on joue toutes les combinaisons de ${k} parmi eux (en désordre). ` +
-    `« Ce soir » : la chance, selon la machine, que les ${k} premiers de la course soient tous dans ces N chevaux. ` +
+  return `<div class="carte large"><h3>Jouer en champ réduit</h3><p class="sous">On prend les N chevaux que le lab classe en tête et on joue toutes les combinaisons de ${k} parmi eux (en désordre). ` +
+    `« Ce soir » : la chance, selon le lab, que les ${k} premiers de la course soient tous dans ces N chevaux. ` +
     (q ? `<b>Attention : les jours où ça tombe, ce sont surtout des favoris et le 4+1 paie peu ; sur 2022-2026, chaque formule a rendu environ 0,30 F pour 1 F misé.</b>` : "") + `</p>` +
     `<div class="defile"><table><thead><tr><th>Premiers choix joués</th><th class="n">Ce soir : chance que l'arrivée y soit</th><th class="n">Tickets</th><th class="n">Mise</th>` +
     (q ? `<th class="n col-tel">2022-2026 : arrivée dans le lot</th><th class="n col-tel">Ces jours-là, le 4+1 a payé (médiane)</th><th class="n">Rendu pour 1 F</th>` : "") + `</tr></thead><tbody>` +
@@ -863,9 +912,9 @@ function tickets() {
   const etB = fige ? `<span class="statut fige"><i></i>Figé à ${esc(etat.photo)}</span>` : etat.sans_cote ? `<span class="statut attente"><i></i>Avec les cotes</span>` : `<span class="statut"><i></i>Provisoire</span>`;
   const tk = (v) => v && !etat.sans_cote ? `<b class="num">${v.join("-")}</b>` : `<span class="discret">—</span>`;
   const L = [["S1 · 2 favoris de la cote française", "Suivi papier", tk(s.S1), etS(s.S1)], ["S14 · 2 favoris du journal LONAB", "Suivi papier", tk(s.S14), etS(s.S14)],
-    ["S20 · écart France / journal", "Suivi papier", tk(s.S20), etS(s.S20)], ["B1 · couplé gagnant le plus probable", "Machine", tk(t.B1), etB],
-    ["B2 · couplé gagnant le plus sous-payé", "Machine", t.B2 || etat.sans_cote ? tk(t.B2) : `<span class="discret">pas de jeu (écart ${virg(t.ratio_B2)} &lt; 1,54)</span>`, etB],
-    ["B3 · couplé placé le plus probable", "Machine", tk(t.B3), etB], [`B4 · ${esc(PARI[etat.pari] || etat.pari)} le plus probable`, "Machine", tk(t.B4), etB]];
+    ["S20 · écart France / journal", "Suivi papier", tk(s.S20), etS(s.S20)], ["B1 · couplé gagnant le plus probable", "Lab", tk(t.B1), etB],
+    ["B2 · couplé gagnant le plus sous-payé", "Lab", t.B2 || etat.sans_cote ? tk(t.B2) : `<span class="discret">pas de jeu (écart ${virg(t.ratio_B2)} &lt; 1,54)</span>`, etB],
+    ["B3 · couplé placé le plus probable", "Lab", tk(t.B3), etB], [`B4 · ${esc(PARI[etat.pari] || etat.pari)} le plus probable`, "Lab", tk(t.B4), etB]];
   $("#tickets").innerHTML = L.map((r) => `<tr><td>${r[0]}</td><td class="col-tel discret">${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join("");
 }
 
@@ -912,7 +961,7 @@ function resultat() {
   if (!r) { bloc.hidden = true; return; }
   bloc.hidden = false;
   $("#resultat").innerHTML = `<p style="margin:0 0 6px">Arrivée PMU'B : <b class="num" style="font-size:22px">${r.arrivee.join(" - ")}</b></p>` +
-    `<p class="discret" style="margin:0">Couplé gagnant payé <b>${fr(r.rapports.cg)} F</b> pour 500 · le gagnant avait <b>${pct(r.p_gagnant || 0)}</b> de chances selon la machine · gains des tickets de la machine : ${Object.entries(r.gains).map(([k, v]) => `${esc(k)} ${fr(v)} F`).join(" · ")}</p>`;
+    `<p class="discret" style="margin:0">Couplé gagnant payé <b>${fr(r.rapports.cg)} F</b> pour 500 · le gagnant avait <b>${pct(r.p_gagnant || 0)}</b> de chances selon le lab · gains des tickets du lab : ${Object.entries(r.gains).map(([k, v]) => `${esc(k)} ${fr(v)} F`).join(" · ")}</p>`;
 }
 
 function fusion() {
@@ -967,7 +1016,7 @@ function courseDirect() {
     const c = etat.comparaison || {}, g = c.gagnant || {};
     h = `<span class="cd-tag ok"><i></i>${ph === "officielle" ? "Arrivée officielle" : "Arrivée provisoire"}</span>` +
       `<div class="cd-arrivee">${d.arrivee.map((n, i) => `<span>${n}</span>`).join("")}</div>` +
-      `<div class="cd-sous">${g.num ? `Le gagnant était le ${g.rang}${g.rang === 1 ? "er" : "e"} choix de la machine (${pct(g.p)}).` : ""}` +
+      `<div class="cd-sous">${g.num ? `Le gagnant était le ${g.rang}${g.rang === 1 ? "er" : "e"} choix du lab (${pct(g.p)}).` : ""}` +
       `${d.duree ? ` Course courue en ${mmss(d.duree)}.` : ""}${ph === "provisoire" ? " Arrivée provisoire : elle peut encore changer (réclamation)." : ""}</div>`;
   }
   const rcm = etat.course.libelle.match(/^R(\d+)C(\d+)/), jj = etat.date.split("-").reverse().join("");
@@ -979,13 +1028,68 @@ function courseDirect() {
   if (fr_) fr_.textContent = `Direct relu toutes les 3 secondes · dernière lecture il y a ${Math.max(0, Math.round((new Date() - new Date(live.maj_utc)) / 1000))} s`;
 }
 
+const VUES = ["aujourdhui", "chevaux", "coupons", "resultats", "infos"];
+const TITRES = {aujourdhui: "Aujourd'hui", chevaux: "Chevaux", coupons: "Coupons", resultats: "Résultats", infos: "Calendrier"};
+function allerA() {
+  const h = location.hash || "#vue-aujourdhui";
+  let cible = null;
+  try { cible = document.querySelector(h); } catch (e) { cible = null; }
+  const nom = h.startsWith("#cheval-") ? "chevaux" : (cible && cible.closest("[data-vue]") || {dataset: {vue: "aujourdhui"}}).dataset.vue;
+  document.querySelectorAll("[data-vue]").forEach((v) => { v.hidden = v.dataset.vue !== nom; });
+  document.querySelectorAll("#onglets a").forEach((a) => { if (a.dataset.cible === nom) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+  document.title = `${TITRES[nom]} · Lab PMU'B`;
+  if (cible && !VUES.some((v) => h === "#vue-" + v)) cible.scrollIntoView(); else scrollTo({top: 0, behavior: "instant"});
+  if (nom === "chevaux" && etat && etat.chevaux) courbe(false);
+}
+addEventListener("hashchange", allerA);
+
+function appris() {
+  const a = (etat.bilan || {}).apprenante, el = $("#appris");
+  el.hidden = !(a && a.appris);
+  if (a && a.appris) el.innerHTML = `Chances mises à jour après la course du ${a.derniere.slice(8)}/${a.derniere.slice(5, 7)} : <b>${fr(a.appris)}</b> Quintés appris.`;
+}
+
+function lots() {
+  const L = etat.lots, c = etat.comparaison;
+  $("#lot-section").hidden = !(L && L.length);
+  if (!L || !L.length) return;
+  const jugé = (nom, i) => { const x = ((c && c.lots) || []).find((y) => y.pari === nom); return x ? x.jugement[i] : null; };
+  $("#lots").innerHTML = L.map((x) => `<div class="carte pad"><p class="petit-titre">${esc(x.libelle)} : le lot de ${x.N} chevaux</p>` +
+    `<div class="lot-nums">${x.lot.map((n) => `<span class="numero">${n}</span>`).join("")}</div>` +
+    `<ul class="lot-coupons">${x.coupons.map((t, i) => { const j = jugé(x.pari, i); return `<li><span>${t.join(" - ")}</span><em>${j ? (j === "non" ? "perdu" : "gagné, " + j) : "coupon " + (i + 1)}</em></li>`; }).join("")}</ul>` +
+    `<p class="lot-chiffres">Ce lot contient l'arrivée <b>${pct(x.couverture, 0)}</b> du temps. Un coupon au hasard passe <b>1 fois sur ${fr(x.un_sur)}</b> environ, et rend <b>${virg(x.rend, 2)} F pour 1 F</b>.</p></div>`).join("");
+  $("#lots-note").textContent = "Mesuré sur 2022-2026, les lots ont tenu chaque année depuis 2018. Tirer au hasard évite les tickets les plus mauvais, mais ne bat pas le prélèvement de 35 % : aucun de ces coupons ne rend sa mise sur la durée.";
+}
+
+function apprend() {
+  const b = etat.bilan || {}, g = b.general, a = b.apprenante, x = (b.liste || []).find((y) => y.general);
+  $("#apprend-section").hidden = !(g && g.courses && x);
+  if (!x) return;
+  const lignes = (b.liste || []).filter((y) => y.general && y.general.apprenante).slice(0, 10);
+  const table = lignes.length ? `<div class="carte pad large-tout"><p class="petit-titre">Course après course</p><div class="defile"><table><thead><tr><th>Jour</th><th>Gagnant</th><th class="n">Chance donnée</th><th class="n">Sans apprendre</th><th class="n col-tel">Écart</th></tr></thead><tbody>` +
+    lignes.map((y) => { const q = y.general.apprenante, e_ = q.p - y.general.p_f; return `<tr><td>${y.date.slice(8)}/${y.date.slice(5, 7)}</td><td><span class="numero">${y.arrivee[0]}</span></td><td class="n"><b>${pct(q.p)}</b></td><td class="n">${pct(y.general.p_f)}</td><td class="n col-tel">${e_ >= 0 ? "+" : "−"}${virg(Math.abs(100 * e_), 2)} pt</td></tr>`; }).join("") +
+    `</tbody></table></div><p class="note">Chaque course apprise compte pour la suivante. Le progrès se lit sur la moyenne de plusieurs courses : une seule course peut toujours surprendre.</p></div>` : "";
+  const j = x.general, sur = (p, n) => (p > 0.5 ? `Une course ${n} sur deux ou plus fait aussi mal ou pire` : `1 Quinté ${n} sur ${fr(1 / p)} fait aussi mal ou pire`), date_ = x.date.slice(8) + "/" + x.date.slice(5, 7);
+  const lot = (x.lots || []).find((y) => y.pari === "tierce");
+  const nom = { trot: "de trot", plat: "de plat", obstacle: "d'obstacle" }[j.groupe];
+  $("#apprend").innerHTML = `<div class="carte pad"><p class="petit-titre">Dernière course, ${date_}, ${esc(x.hippodrome)}</p>` +
+    `<p class="comp-tete">Arrivée <b>${x.arrivee.join(" - ")}</b>. Sur ses 5 premiers choix, le lab en avait <b>${j.top5}</b> dans l'arrivée ; la moyenne ${nom} est de <b>${virg(j.moy_top5, 1)}</b>. ` +
+    `Ses 4 premiers choix en avaient <b>${j.top4}</b>. ${sur(j.part_top4, nom)}. Le gagnant était son choix n° <b>${j.gagnant}</b>.</p>` +
+    (lot ? `<p class="lot-chiffres">Lot de ${lot.N} du tiercé : ${lot.dedans.length} cheval${lot.dedans.length > 1 ? "x" : ""} sur 3 dedans. Il aurait fallu ${lot.n_necessaire} chevaux.</p>` : "") + `</div>` +
+    `<div class="carte pad"><p class="petit-titre">Depuis le début du suivi</p>` +
+    `<p class="comp-tete"><b>${g.courses}</b> course${g.courses > 1 ? "s" : ""}. En moyenne, <b>${virg(g.top5, 1)}</b> de ses 5 premiers choix dans l'arrivée, contre <b>${virg(g.ref_top5, 1)}</b> en général. ` +
+    `Gagnant en 1er choix : <b>${g.gagnant_1}</b> fois (${pct(g.ref_gagnant_1, 0)} en général).</p>` +
+    (a && a.appris ? `<p class="lot-chiffres">Le lab apprend après chaque course : <b>${fr(a.appris)}</b> Quintés appris, jusqu'au ${a.derniere.slice(8)}/${a.derniere.slice(5, 7)}. ` +
+      (a.courses ? `Sur ${a.courses} course${a.courses > 1 ? "s" : ""}, apprendre a donné plus de chance au gagnant ${a.mieux} fois.` : "La première comparaison arrive avec la prochaine course.") + `</p>` : "") + `</div>` + table;
+}
+
 function comparaison() {
   const c = etat.comparaison, el = $("#comparaison");
   if (!c) { el.hidden = true; return; }
   el.hidden = false;
   const g = c.gagnant, top = c.chevaux;
   $("#comp-source").textContent = `Comparé à la ${c.source}${c.definitive ? "" : " · arrivée provisoire"}`;
-  $("#comp-tete").innerHTML = `Le gagnant, <b>n° ${g.num} ${esc(titre(top[0].nom))}</b>, était le <b>${g.rang}${g.rang === 1 ? "er" : "e"} choix</b> de la machine ` +
+  $("#comp-tete").innerHTML = `Le gagnant, <b>n° ${g.num} ${esc(titre(top[0].nom))}</b>, était le <b>${g.rang}${g.rang === 1 ? "er" : "e"} choix</b> du lab ` +
     `(${pct(g.p)} ; le marché : ${pct(g.marche)}). Les ${top.length} premiers étaient tous dans ses <b>${c.max_rang} premiers choix</b>.`;
   $("#comp-chevaux").innerHTML = top.map((x) => `<tr><td class="n">${x.place}</td><td><span class="numero">${x.num}</span></td><td>${esc(titre(x.nom))}</td>` +
     `<td class="n">${x.rang ? x.rang + (x.rang === 1 ? "er" : "e") : "—"}</td><td class="n">${pct(x.p)}</td><td class="n col-tel">${pct(x.marche)}</td><td class="n col-tel">${virg(x.cote)}</td></tr>`).join("");
@@ -1073,8 +1177,8 @@ function dernier() {
   const arr = ((dn.resultat || {}).arrivee || dn.arrivee || []);
   el.hidden = false;
   el.innerHTML = `<b>Dernier Quinté</b> · ${esc(titre(dn.libelle.replace(/^R\d+C\d+\s+/, "")))} (${esc(titre(dn.hippodrome))}) : ` +
-    (arr.length ? `arrivée <b class="num">${arr.join("-")}</b>${dn.p_gagnant ? ` ; la machine donnait au gagnant ${pct(dn.p_gagnant)} de chances` : ""}.` : "arrivée en attente.") +
-    (dn.comparaison ? ` Le gagnant était le ${dn.comparaison.gagnant.rang}${dn.comparaison.gagnant.rang === 1 ? "er" : "e"} choix de la machine ; coupons touchés : ${dn.comparaison.verifs.filter((v) => v.ok).length} sur ${dn.comparaison.verifs.length}.` : "") +
+    (arr.length ? `arrivée <b class="num">${arr.join("-")}</b>${dn.p_gagnant ? ` ; le lab donnait au gagnant ${pct(dn.p_gagnant)} de chances` : ""}.` : "arrivée en attente.") +
+    (dn.comparaison ? ` Le gagnant était le ${dn.comparaison.gagnant.rang}${dn.comparaison.gagnant.rang === 1 ? "er" : "e"} choix du lab ; coupons touchés : ${dn.comparaison.verifs.filter((v) => v.ok).length} sur ${dn.comparaison.verifs.length}.` : "") +
     (dn.resultat ? ` Couplé gagnant PMU'B : ${fr(dn.resultat.rapports.cg)} F pour 500.` : "");
 }
 
@@ -1087,10 +1191,10 @@ function rendre() {
     $("#puces").innerHTML = `<span>${esc(etat && etat.vide ? etat.vide : "Pas encore de données.")}</span>`;
     return;
   }
-  passes(); entete(); etapes(); courseDirect(); argent(); coupon(); tuiles(); comparaison(); fil(); lecture(); chevaux(); combis(); tickets(); resultat(); signaux(); jours(); dernier();
+  passes(); entete(); etapes(); courseDirect(); argent(); coupon(); tuiles(); appris(); lots(); apprend(); comparaison(); fil(); lecture(); chevaux(); combis(); tickets(); resultat(); signaux(); jours(); dernier();
   if (premier || (avant && avant.maj !== etat.maj)) courbe(premier);
   $("#calibration").innerHTML = CALIB.map((c) => `<tr><td>${c[0]}</td><td class="n col-tel">${fr(c[1])}</td><td class="n">${virg(c[2], 1)} %</td><td class="n"><b>${virg(c[3], 1)} %</b></td></tr>`).join("");
-  $("#empreinte").innerHTML = `Modèle figé : <span class="mono">${esc((etat.sha || "").slice(0, 16))}</span> · règles : <span class="mono">PREENREGISTREMENT_P6.md</span>`;
+  $("#empreinte").innerHTML = `Référence figée : <span class="mono">${esc((etat.sha || "").slice(0, 16))}</span> · règles : <span class="mono">PREENREGISTREMENT_P6.md</span>`;
   $("#pied").innerHTML = `<span>Lab PMU'B · données PMU et LONAB</span><span>Journal : ${esc(etat.journal || "—")}</span>` +
     (PUBLIC ? `<span>Relu toutes les 5 s, toutes les 3 s pendant la course</span>` : `<span>Page locale, non joignable depuis Internet</span>` +
       (etat.public ? `<span>Version à partager : <a href="${esc(etat.public)}" target="_blank" rel="noopener">${esc(etat.public)}</a></span>` : ""));
