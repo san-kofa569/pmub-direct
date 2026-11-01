@@ -162,6 +162,11 @@ h1 { font-family:"Source Serif", Georgia, serif; font-weight:600; font-size:40px
 .lot-coupons em { font-style:normal; font-size:12px; color:var(--texte-3); }
 .lot-chiffres { margin:10px 0 0; font-size:13px; color:var(--texte-2); }
 .lot-chiffres b { color:var(--texte); }
+.lot-coupons .lab { font-style:normal; font-size:11px; font-weight:600; color:var(--serie-1); margin-left:8px; white-space:nowrap; }
+.dix-bilan { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:12px; margin:14px 0 0; padding-top:12px; border-top:1px solid var(--ligne-forte); }
+.dix-bilan div { min-width:0; } .dix-bilan dt { font-size:12px; color:var(--texte-3); } .dix-bilan dd { margin:2px 0 0; font-size:20px; font-weight:600; font-variant-numeric:tabular-nums; }
+.dix-bilan small { display:block; font-size:12px; color:var(--texte-3); font-weight:400; }
+@media (max-width:560px) { .dix-bilan { grid-template-columns:1fr; } }
 .large-tout { grid-column:1 / -1; }
 #apprend { grid-template-columns:minmax(0, 1fr) minmax(0, 1fr); }
 @media (max-width:860px) { #apprend { grid-template-columns:minmax(0, 1fr); } }
@@ -474,7 +479,7 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
 
   <div class="vue" data-vue="coupons" id="vue-coupons" hidden>
 <section id="lot-section" hidden>
-    <div class="tete-section"><h2>Le lot du jour et les coupons au hasard</h2><p>Les chevaux les plus probables, puis des coupons tirés au sort dans ce lot, en plus du coupon du lab.</p></div>
+    <div class="tete-section"><h2>Les 10 coupons les plus probables</h2><p>Sur le pari du jour, du plus probable au moins probable. Le premier est le ticket du lab.</p></div>
     <div class="lots" id="lots"></div>
     <p class="note" id="lots-note"></p>
   </section>
@@ -987,7 +992,7 @@ async function chargerLive() {
     if (n.arrivee && JSON.stringify(n.arrivee) !== arrAvant) toast(`Arrivée ${n.definitive ? "officielle" : "provisoire"} : ${n.arrivee.join(" - ")}`);
   } catch (e) { /* réseau : nouvel essai dans 3 s */ }
 }
-async function boucleLive() { if (enCourse()) await chargerLive(); setTimeout(boucleLive, 3000); }
+async function boucleLive() { try { if (enCourse()) await chargerLive(); } catch (e) { console.error(e); } setTimeout(boucleLive, 3000); }
 
 function phase() {
   if (!etat || !etat.course || etat.mode === "prochaine" || !etat.chevaux) return null;
@@ -1050,15 +1055,21 @@ function appris() {
 }
 
 function lots() {
-  const L = etat.lots, c = etat.comparaison;
-  $("#lot-section").hidden = !(L && L.length);
-  if (!L || !L.length) return;
-  const jugé = (nom, i) => { const x = ((c && c.lots) || []).find((y) => y.pari === nom); return x ? x.jugement[i] : null; };
-  $("#lots").innerHTML = L.map((x) => `<div class="carte pad"><p class="petit-titre">${esc(x.libelle)} : le lot de ${x.N} chevaux</p>` +
-    `<div class="lot-nums">${x.lot.map((n) => `<span class="numero">${n}</span>`).join("")}</div>` +
-    `<ul class="lot-coupons">${x.coupons.map((t, i) => { const j = jugé(x.pari, i); return `<li><span>${t.join(" - ")}</span><em>${j ? (j === "non" ? "perdu" : "gagné, " + j) : "coupon " + (i + 1)}</em></li>`; }).join("")}</ul>` +
-    `<p class="lot-chiffres">Ce lot contient l'arrivée <b>${pct(x.couverture, 0)}</b> du temps. Un coupon au hasard passe <b>1 fois sur ${fr(x.un_sur)}</b> environ, et rend <b>${virg(x.rend, 2)} F pour 1 F</b>.</p></div>`).join("");
-  $("#lots-note").textContent = "Mesuré sur 2022-2026, les lots ont tenu chaque année depuis 2018. Tirer au hasard évite les tickets les plus mauvais, mais ne bat pas le prélèvement de 35 % : aucun de ces coupons ne rend sa mise sur la durée.";
+  const D = etat.dix, juge = (etat.comparaison || {}).dix;
+  $("#lot-section").hidden = !D;
+  if (!D) return;
+  const sort = (i) => { const j = juge && juge[i]; return !j ? null : j === "non" ? "perdu" : j === "bonus" ? "bonus" : "gagné, " + j; };
+  const n = D.coupons.length, perte = D.retour === null ? null : D.total - D.retour;
+  $("#lots").innerHTML = `<div class="carte pad"><p class="petit-titre">${esc(D.libelle)} : les ${n} coupons</p>` +
+    `<ul class="lot-coupons">${D.coupons.map((c, i) => `<li><span>${c.t.join(" - ")}${i ? "" : `<em class="lab">ticket du lab</em>`}</span><em>${sort(i) || `${pct(c.p, c.p < 0.01 ? 2 : 1)} · 1 sur ${fr(Math.round(c.un_sur))}`}</em></li>`).join("")}</ul>` +
+    `<dl class="dix-bilan"><div><dt>Mise totale</dt><dd>${fr(D.total)} F</dd><small>${n} coupons à ${fr(D.mise)} F</small></div>` +
+    `<div><dt>Chance qu'un coupon passe</dt><dd>${pct(D.chance, 1)}</dd><small>soit 1 jour sur ${fr(Math.round(1 / D.chance))}</small></div>` +
+    (perte === null ? `<div><dt>Espérance de gain</dt><dd>—</dd><small>trop peu de journées mesurées</small></div>`
+      : `<div><dt>Espérance de gain</dt><dd>−${fr(perte)} F</dd><small>${fr(D.retour)} F reviennent en moyenne</small></div>`) + `</dl>` +
+    (D.R === null || D.R === undefined ? "" : `<p class="lot-chiffres">Mesuré sur <b>${fr(D.journees)} journées</b> de 2022 à 2026, avec les vrais rapports : ces ${n} coupons ont rendu <b>${virg(D.R, 2)} F pour 1 F</b> (entre ${virg(D.ic[0], 2)} et ${virg(D.ic[1], 2)}). ` +
+      `Une journée sur ${fr(Math.round(1 / D.part_gain))}, au moins un coupon paie : ${fr(D.gain_median)} F en médiane, pour ${fr(D.total)} F misés.</p>`) +
+    (etat.dix_suivi ? `<p class="lot-chiffres">Suivi réel depuis novembre, sur le papier : <b>${fr(etat.dix_suivi.courses)} journée${etat.dix_suivi.courses > 1 ? "s" : ""}</b>, ${fr(etat.dix_suivi.gains)} F rendus pour ${fr(etat.dix_suivi.mise)} F misés.</p>` : "") + `</div>`;
+  $("#lots-note").textContent = "L'espérance est une moyenne mesurée sur le passé : les rapports du jour ne sont connus qu'après la course. Les coupons les plus probables paient moins que les autres : aucun lot testé par le lab ne rend sa mise.";
 }
 
 function apprend() {
@@ -1186,7 +1197,7 @@ function rendre() {
   $("#demo").hidden = !(etat && etat.demo);
   if (etat && etat.demo) $("#demo").textContent = etat.demo;
   etatDirect();
-  if (!etat || etat.vide || !etat.chevaux) {
+  if (!etat || etat.vide || !etat.chevaux || !etat.course) {
     $("#titre").textContent = "Le Quinté du jour";
     $("#puces").innerHTML = `<span>${esc(etat && etat.vide ? etat.vide : "Pas encore de données.")}</span>`;
     return;
@@ -1232,7 +1243,10 @@ async function charger() {
   rendre();
 }
 function cadence() { return PERIODE; }
-async function boucle() { await charger(); prochaine = Date.now() + cadence() * 1000; setTimeout(boucle, cadence() * 1000); }
+async function boucle() {
+  try { await charger(); } catch (e) { console.error(e); }  // un état imprévu ne doit jamais arrêter la relecture d'une page restée ouverte
+  prochaine = Date.now() + cadence() * 1000; setTimeout(boucle, cadence() * 1000);
+}
 boucle();
 boucleLive();
 setInterval(seconde, 1000);
