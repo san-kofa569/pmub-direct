@@ -167,6 +167,24 @@ h1 { font-family:"Source Serif", Georgia, serif; font-weight:600; font-size:40px
 .dix-bilan div { min-width:0; } .dix-bilan dt { font-size:12px; color:var(--texte-3); } .dix-bilan dd { margin:2px 0 0; font-size:20px; font-weight:600; font-variant-numeric:tabular-nums; }
 .dix-bilan small { display:block; font-size:12px; color:var(--texte-3); font-weight:400; }
 @media (max-width:560px) { .dix-bilan { grid-template-columns:1fr; } }
+.formules tbody tr { cursor:pointer; } .formules tbody tr:hover { background:var(--surface-3); }
+.formules tbody tr.choisie { background:var(--voile-1); box-shadow:inset 3px 0 0 #b98a35; }
+.formules button { all:unset; cursor:pointer; font-weight:600; font-variant-numeric:tabular-nums; }
+.formules .marque { display:inline-block; margin-left:6px; padding:1px 6px; border-radius:9px; font-size:10.5px; font-weight:600; background:var(--surface-3); color:var(--texte-2); white-space:nowrap; }
+.f-tuiles { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:12px; margin-bottom:12px; }
+@media (max-width:860px) { .f-tuiles { grid-template-columns:repeat(2, minmax(0, 1fr)); } }
+.f-chiffres-l { margin:0 0 6px; font-size:13.5px; color:var(--texte-2); } .f-chiffres-l:last-child { margin-bottom:0; } .f-chiffres-l b { color:var(--texte); }
+.f-barre { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:8px; }
+.f-boutons { display:flex; gap:6px; align-items:center; font-size:12.5px; color:var(--texte-3); }
+.lot-coupons.grille { display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); column-gap:22px; }
+.lot-coupons.grille li:last-child { border-bottom:1px solid var(--ligne); }
+.lot-coupons li.touche { background:var(--voile-1); font-weight:600; }
+.lot-coupons .no { color:var(--texte-3); font-size:11.5px; margin-right:8px; font-variant-numeric:tabular-nums; }
+.trois-l { display:flex; justify-content:space-between; gap:10px; padding:5px 0; border-bottom:1px solid var(--ligne); font-size:13.5px; font-variant-numeric:tabular-nums; } .trois-l:last-child { border-bottom:0; } .trois-l span:last-child { color:var(--texte-3); }
+.st-titre { font-size:14px; font-weight:600; margin:12px 14px 8px; }
+.f-tuiles .tuile .sous { display:block; }
+.f-bouton { font:inherit; font-size:12.5px; font-weight:600; padding:6px 11px; border-radius:7px; border:1px solid var(--ligne-forte); background:var(--surface); color:var(--texte); cursor:pointer; }
+.f-bouton:hover:not(:disabled) { background:var(--surface-3); } .f-bouton:disabled { opacity:.45; cursor:default; }
 .large-tout { grid-column:1 / -1; }
 #apprend { grid-template-columns:minmax(0, 1fr) minmax(0, 1fr); }
 @media (max-width:860px) { #apprend { grid-template-columns:minmax(0, 1fr); } }
@@ -427,7 +445,7 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
   </div>
 </div>
   <div class="bandeau-fil" id="bandeau-fil" hidden><div class="int"><span class="h" id="bf-h"></span><span id="bf-t"></span><a href="#fil-section">Tout le fil</a></div></div>
-<nav class="onglets" id="onglets" aria-label="Pages de l'application"><div class="int"><a href="#vue-aujourdhui" data-cible="aujourdhui"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V4m0 1h13l-3 4 3 4H4"/></svg><span>Aujourd'hui</span></a><a href="#vue-chevaux" data-cible="chevaux"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4C4.8 6.5 3.5 9.4 3.5 12.6 3.5 17.7 7.3 21 12 21s8.5-3.3 8.5-8.4c0-3.2-1.3-6.1-3.5-8.6M9.6 4.9c-1.4 2.2-2.2 4.8-2.2 7.5 0 2.9 2 5 4.6 5s4.6-2.1 4.6-5c0-2.7-.8-5.3-2.2-7.5"/></svg><span>Chevaux</span></a><a href="#vue-coupons" data-cible="coupons"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4zM14 6v2m0 3v2m0 3v2"/></svg><span>Coupons</span></a><a href="#vue-resultats" data-cible="resultats"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5v-7h4zm0 0v-12h6v12m0 0h4v-9h-4M12 3l1 2 2 .3-1.5 1.4.4 2.1L12 7.8l-1.9 1 .4-2.1L9 5.3l2-.3z"/></svg><span>Résultats</span></a><a href="#vue-infos" data-cible="infos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v14H4zM4 10h16M8 3v4m8-4v4"/></svg><span>Calendrier</span></a></div></nav>
+<nav class="onglets" id="onglets" aria-label="Pages de l'application"><div class="int"><a href="#vue-aujourdhui" data-cible="aujourdhui"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V4m0 1h13l-3 4 3 4H4"/></svg><span>Aujourd'hui</span></a><a href="#vue-chevaux" data-cible="chevaux"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4C4.8 6.5 3.5 9.4 3.5 12.6 3.5 17.7 7.3 21 12 21s8.5-3.3 8.5-8.4c0-3.2-1.3-6.1-3.5-8.6M9.6 4.9c-1.4 2.2-2.2 4.8-2.2 7.5 0 2.9 2 5 4.6 5s4.6-2.1 4.6-5c0-2.7-.8-5.3-2.2-7.5"/></svg><span>Chevaux</span></a><a href="#vue-coupons" data-cible="coupons"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4zM14 6v2m0 3v2m0 3v2"/></svg><span>Coupons</span></a><a href="#vue-stats" data-cible="stats"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16M7 20v-7m5 7V5m5 15v-10"/></svg><span>Stats</span></a><a href="#vue-resultats" data-cible="resultats"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5v-7h4zm0 0v-12h6v12m0 0h4v-9h-4M12 3l1 2 2 .3-1.5 1.4.4 2.1L12 7.8l-1.9 1 .4-2.1L9 5.3l2-.3z"/></svg><span>Résultats</span></a><a href="#vue-infos" data-cible="infos"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v14H4zM4 10h16M8 3v4m8-4v4"/></svg><span>Calendrier</span></a></div></nav>
 </header>
 
 <div class="demo" id="demo" hidden></div>
@@ -478,10 +496,23 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
   </div>
 
   <div class="vue" data-vue="coupons" id="vue-coupons" hidden>
+<section id="lot-vide" hidden>
+    <div class="tete-section"><h2>Les coupons du jour</h2><p>Les formules arrivent avec les cotes, le matin de la course.</p></div>
+  </section>
 <section id="lot-section" hidden>
-    <div class="tete-section"><h2>Les 10 coupons du jour</h2><p>Le ticket du lab, puis 9 coupons choisis dans le lot pour attraper le plus de bons chiffres.</p></div>
-    <div class="lots" id="lots"></div>
-    <p class="note" id="lots-note"></p>
+    <div class="tete-section"><h2>Choisis ta formule</h2><p id="formules-sous"></p></div>
+    <div class="carte"><div class="defile"><table class="formules"><thead><tr><th>Formule</th><th class="n">Mise totale</th><th class="n">Contient l'arrivée</th><th class="n col-tel">Aujourd'hui</th><th class="n col-tel">Reviennent</th><th class="n">Perte moyenne</th></tr></thead><tbody id="formules-lignes"></tbody></table></div></div>
+    <p class="note" id="formules-note"></p>
+  </section>
+<section id="formule-detail" hidden>
+    <div class="tete-section"><h2 id="fd-titre"></h2><p id="fd-sous"></p></div>
+    <div class="f-tuiles" id="fd-tuiles"></div>
+    <div class="carte pad" id="fd-chiffres"></div>
+    <div class="carte pad" id="fd-coupons" style="margin-top:12px"></div>
+  </section>
+<section id="trois-section" hidden>
+    <div class="tete-section"><h2>Quinté, quarté, tiercé</h2><p>Ce que contient chaque taille de lot, mesuré sur les courses de 2022 à 2026</p></div>
+    <div class="lots" id="trois"></div>
   </section>
 
 <section id="combinaisons">
@@ -495,6 +526,16 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
       <thead><tr><th>Méthode</th><th class="col-tel">Famille</th><th>Ticket</th><th>État</th></tr></thead>
       <tbody id="tickets"></tbody>
     </table></div></div>
+  </section>
+  </div>
+
+  <div class="vue" data-vue="stats" id="vue-stats" hidden>
+<section id="stats-section">
+    <div class="tete-section"><h2>Le point après chaque course</h2><p id="stats-sous"></p></div>
+    <div class="f-tuiles" id="stats-tuiles"></div>
+    <div class="carte" id="stats-formules-carte" style="margin-top:12px"><h3 class="st-titre">Formule par formule</h3><div class="defile"><table><thead><tr><th>Pari</th><th class="n">Coupons</th><th class="n">Courses</th><th class="n">Arrivée contenue</th><th class="n col-tel">Annoncé</th><th class="n col-tel">Misé</th><th class="n col-tel">Rendu</th><th class="n">Pour 1 F</th></tr></thead><tbody id="stats-formules"></tbody></table></div></div>
+    <div class="carte" id="stats-courses-carte" style="margin-top:12px"><h3 class="st-titre">Course par course</h3><div class="defile"><table><thead><tr><th>Date</th><th>Course</th><th>Arrivée</th><th class="n">Bons chiffres, 10 coupons</th><th class="n">Rang de l'arrivée</th><th class="n col-tel">Gagnant, choix du lab</th></tr></thead><tbody id="stats-courses"></tbody></table></div></div>
+    <p class="note">Le lab fait ce point seul, à chaque arrivée officielle, avec les coupons figés avant la course. Les gains arrivent avec la fiche LONAB. Tout est sur le papier : aucun franc misé.</p>
   </section>
   </div>
 
@@ -1033,8 +1074,8 @@ function courseDirect() {
   if (fr_) fr_.textContent = `Direct relu toutes les 3 secondes · dernière lecture il y a ${Math.max(0, Math.round((new Date() - new Date(live.maj_utc)) / 1000))} s`;
 }
 
-const VUES = ["aujourdhui", "chevaux", "coupons", "resultats", "infos"];
-const TITRES = {aujourdhui: "Aujourd'hui", chevaux: "Chevaux", coupons: "Coupons", resultats: "Résultats", infos: "Calendrier"};
+const VUES = ["aujourdhui", "chevaux", "coupons", "stats", "resultats", "infos"];
+const TITRES = {aujourdhui: "Aujourd'hui", chevaux: "Chevaux", coupons: "Coupons", stats: "Stats", resultats: "Résultats", infos: "Calendrier"};
 function allerA() {
   const h = location.hash || "#vue-aujourdhui";
   let cible = null;
@@ -1054,24 +1095,103 @@ function appris() {
   if (a && a.appris) el.innerHTML = `Chances mises à jour après la course du ${a.derniere.slice(8)}/${a.derniere.slice(5, 7)} : <b>${fr(a.appris)}</b> Quintés appris.`;
 }
 
+let choixK = null, pageC = 0, couponsJ = null, couponsCle = "", statsJ = null, statsN = -1;
+const PAR_PAGE = 60;
+const urlDonnees = (nom) => PUBLIC ? [SOURCE.replace(/etat\.json$/, nom + ".json"), SECOURS ? SECOURS.replace(/etat\.json$/, nom + ".json") : null] : ["/api/" + nom, null];
+const dixZ = (x) => fr(Math.round(x / 10) * 10);
+
+async function chargerCoupons() {
+  const cle = etat.date + "|" + (etat.photo || etat.maj);
+  if (couponsCle === cle) return;
+  try {
+    const [a, b] = urlDonnees("coupons"), j = await lire(a, b);
+    if (j && j.date === etat.date) { couponsJ = j; couponsCle = cle; lots(); }
+  } catch (e) { console.error(e); }
+}
+
+function choisirFormule(K) { choixK = K; pageC = 0; lots(); }
+function changerPage(d) { pageC = Math.max(0, pageC + d); lots(); }
+async function copierCoupons() {
+  const f = (etat.formules.lignes || []).find((x) => x.K === choixK);
+  const L = f.equipe ? etat.dix.coupons.map((c) => c.t) : couponsJ.liste.slice(0, f.coupons);
+  const t = L.map((c) => c.join("-")).join("\n"), b = $("#fd-copier");
+  try { await navigator.clipboard.writeText(t); b.textContent = "Copié"; }
+  catch (e) { const z = document.createElement("textarea"); z.value = t; document.body.append(z); z.select(); document.execCommand("copy"); z.remove(); b.textContent = "Copié"; }
+  setTimeout(() => { b.textContent = `Copier les ${fr(L.length)} coupons`; }, 1800);
+}
+
 function lots() {
-  const D = etat.dix, juge = (etat.comparaison || {}).dix;
-  $("#lot-section").hidden = !D;
-  if (!D) return;
-  const sort = (i) => { const j = juge && juge[i]; return !j ? null : j === "ordre" || j === "désordre" ? "gagné, " + j : j; };
-  const n = D.coupons.length, perte = D.retour == null ? null : D.total - D.retour, S = etat.dix_suivi;
-  $("#lots").innerHTML = `<div class="carte pad"><p class="petit-titre">${esc(D.libelle)} : le lot de ${D.N} chevaux</p>` +
-    `<div class="lot-nums">${D.lot.map((x) => `<span class="numero">${x}</span>`).join("")}</div>` +
-    `<ul class="lot-coupons">${D.coupons.map((c, i) => `<li><span>${c.t.join(" - ")}${i ? "" : `<em class="lab">ticket du lab</em>`}</span><em>${sort(i) || `${pct(c.p, c.p < 0.01 ? 2 : 1)} · 1 sur ${fr(Math.round(c.un_sur))}`}</em></li>`).join("")}</ul>` +
-    `<dl class="dix-bilan"><div><dt>Mise totale</dt><dd>${fr(D.total)} F</dd><small>${n} coupons à ${fr(D.mise)} F</small></div>` +
-    `<div><dt>Arrivée exacte dans les ${n}</dt><dd>${pct(D.chance, 1)}</dd><small>soit 1 jour sur ${fr(Math.round(1 / D.chance))}</small></div>` +
-    (perte === null ? `<div><dt>Espérance de gain</dt><dd>—</dd><small>trop peu de journées mesurées</small></div>`
-      : `<div><dt>Espérance de gain</dt><dd>−${fr(perte)} F</dd><small>${fr(D.retour)} F reviennent en moyenne</small></div>`) + `</dl>` +
-    (D.courses ? `<p class="lot-chiffres">Mesuré sur <b>${fr(D.courses)} courses</b> de 2022 à 2026, tous types de course : le meilleur coupon a eu <b>${virg(D.bons, 1)} bons chiffres sur ${D.k}</b> en moyenne, ` +
-      `${D.k - 1} bons ou plus dans ${pct(D.presque, 0)} des courses, et l'arrivée exacte dans ${pct(D.exact, 1)}. Les ${n} coupons ont contenu ${virg(D.couverts, 1)} chevaux de l'arrivée sur ${D.k}.</p>` : "") +
-    (D.R == null ? "" : `<p class="lot-chiffres">Rendement réel sur ${fr(D.journees)} journées : <b>${virg(D.R, 2)} F pour 1 F</b>, et ${virg(D.R_sans_ordre, 2)} F sans les gros lots de l'ordre exact.</p>`) +
-    (S ? `<p class="lot-chiffres">Suivi réel depuis novembre, sur le papier : <b>${fr(S.courses)} journée${S.courses > 1 ? "s" : ""}</b>${S.bons != null ? `, ${virg(S.bons, 1)} bons chiffres en moyenne` : ""}, ${fr(S.gains)} F rendus pour ${fr(S.mise)} F misés.</p>` : "") + `</div>`;
-  $("#lots-note").textContent = "L'espérance est une moyenne mesurée sur le passé : les rapports du jour ne sont connus qu'après la course. Attraper plus de bons chiffres ne veut pas dire gagner plus : aucun lot testé par le lab ne rend sa mise.";
+  const F = etat.formules;
+  $("#lot-vide").hidden = !!F;
+  ["#lot-section", "#formule-detail", "#trois-section"].forEach((x) => { $(x).hidden = !F; });
+  if (!F) return;
+  const L = F.lignes;
+  if (!L.some((x) => x.K === choixK)) { choixK = L[0].K; pageC = 0; }
+  const rendu = (x) => x.R == null ? null : x.mise * x.R;
+  $("#formules-sous").textContent = `${F.libelle} : ${fr(F.combinaisons)} combinaisons possibles aujourd'hui, ${fr(F.mise)} F le coupon. Touche une formule pour voir ses coupons.`;
+  $("#formules-lignes").innerHTML = L.map((x) => `<tr class="${x.K === choixK ? "choisie" : ""}" data-k="${x.K}" onclick="choisirFormule(${x.K})"><td><button type="button" aria-pressed="${x.K === choixK}">${fr(x.coupons)} coupons</button>${x.equipe ? `<span class="marque">équipe</span>` : ""}${x.reel >= 0.75 ? `<span class="marque">75 % et plus</span>` : ""}</td>` +
+    `<td class="n">${fr(x.mise)} F</td><td class="n"><b>${pct(x.reel, 1)}</b></td><td class="n col-tel">${pct(x.aujourdhui, 1)}</td><td class="n col-tel">${rendu(x) == null ? "—" : dixZ(rendu(x)) + " F"}</td><td class="n">${rendu(x) == null ? "—" : "−" + dixZ(x.mise - rendu(x)) + " F"}</td></tr>`).join("");
+  $("#formules-note").textContent = "« Contient l'arrivée » : part des courses de 2022 à 2026 où les bons chevaux étaient dans un des coupons, dans n'importe quel ordre. Contenir l'arrivée ne veut pas dire gagner : même quand elle y est, le lot peut rapporter moins que sa mise. Aucune formule ne rend sa mise en moyenne.";
+  const x = L.find((y) => y.K === choixK), perte = rendu(x) == null ? null : x.mise - rendu(x);
+  $("#fd-titre").textContent = x.equipe ? `L'équipe de ${x.coupons} coupons` : `La formule de ${fr(x.coupons)} coupons`;
+  $("#fd-sous").textContent = x.equipe ? "Le ticket du lab, puis 9 coupons choisis dans le lot pour attraper le plus de bons chiffres" : `Les ${fr(x.coupons)} combinaisons les plus probables de la course`;
+  const tuile = (e, v, s_) => `<div class="tuile"><div class="etiq">${e}</div><div class="val">${v}</div><div class="sous">${s_}</div></div>`;
+  $("#fd-tuiles").innerHTML = tuile("Mise totale", `${fr(x.mise)} F`, `${fr(x.coupons)} coupons à ${fr(F.mise)} F`) +
+    tuile("Contient l'arrivée", pct(x.reel, 1), `marge : ${pct(x.ic[0], 1)} à ${pct(x.ic[1], 1)}`) +
+    tuile("Aujourd'hui, selon le lab", pct(x.aujourdhui, 1), `soit 1 jour sur ${fr(Math.max(1, Math.round(1 / x.aujourdhui)))}`) +
+    tuile("Espérance de gain", perte == null ? "—" : `−${dixZ(perte)} F`, perte == null ? "trop peu de journées" : `${dixZ(rendu(x))} F reviennent en moyenne`);
+  const l = [];
+  if (x.equipe) l.push(`Mesuré sur <b>${fr(x.courses)} courses</b> de 2022 à 2026 : le meilleur coupon a eu <b>${virg(x.bons, 1)} bons chiffres sur ${F.k}</b> en moyenne, et ${F.k - 1} bons ou plus dans <b>${pct(x.presque, 0)}</b> des courses.`);
+  else l.push(`Mesuré sur <b>${fr(x.courses)} courses</b> de 2022 à 2026. Année la plus basse : <b>${pct(x.basse, 1)}</b>. Trot : ${pct(x.trot, 1)} ; plat et obstacle : ${pct(x.autres, 1)}.`);
+  if (x.R != null) l.push(`Rendement réel sur ${fr(x.journees)} journées : <b>${virg(x.R, 2)} F pour 1 F</b>${x.R_ic ? ` (entre ${virg(x.R_ic[0], 2)} et ${virg(x.R_ic[1], 2)})` : ""}, et ${virg(x.R0, 2)} F sans les gros lots de l'ordre exact.`);
+  if (x.part_gain) l.push(`Le lot paie quelque chose dans <b>${pct(x.part_gain, 0)}</b> des journées : ${fr(x.gain_median)} F en médiane, pour ${fr(x.mise)} F misés.`);
+  $("#fd-chiffres").innerHTML = l.map((t) => `<p class="f-chiffres-l">${t}</p>`).join("");
+  const arr = ((etat.direct || {}).arrivee || []).slice(0, F.k), vise = arr.length >= F.k ? new Set(arr) : null, juge = (etat.comparaison || {}).dix;
+  const estLa = (t) => vise && t.every((n) => vise.has(n));
+  let corps;
+  if (x.equipe) {
+    const D = etat.dix;
+    corps = `<p class="petit-titre">${esc(D.libelle)} : le lot de ${D.N} chevaux</p><div class="lot-nums">${D.lot.map((n) => `<span class="numero">${n}</span>`).join("")}</div>` +
+      `<ul class="lot-coupons">${D.coupons.map((c, i) => { const j = juge && juge[i]; return `<li class="${estLa(c.t) ? "touche" : ""}"><span>${c.t.join(" - ")}${i ? "" : `<em class="lab">ticket du lab</em>`}</span><em>${j ? (j === "ordre" || j === "désordre" ? "gagné, " + j : j) : `${pct(c.p, c.p < 0.01 ? 2 : 1)} · 1 sur ${fr(Math.round(c.un_sur))}`}</em></li>`; }).join("")}</ul>`;
+  } else if (!couponsJ || couponsJ.date !== etat.date) {
+    corps = `<p class="f-chiffres-l">Chargement des ${fr(x.coupons)} coupons…</p>`;
+    chargerCoupons();
+  } else {
+    const n = Math.min(x.coupons, couponsJ.liste.length), pages = Math.ceil(n / PAR_PAGE);
+    pageC = Math.min(pageC, pages - 1);
+    const deb = pageC * PAR_PAGE, part = couponsJ.liste.slice(deb, Math.min(n, deb + PAR_PAGE));
+    const ou = vise ? couponsJ.liste.slice(0, n).findIndex(estLa) : -1;
+    corps = (vise ? `<p class="f-chiffres-l"><b>${ou >= 0 ? `L'arrivée était dans cette formule : coupon n° ${fr(ou + 1)}.` : "L'arrivée n'était pas dans cette formule."}</b></p>` : "") +
+      `<ul class="lot-coupons grille">${part.map((t, i) => `<li class="${estLa(t) ? "touche" : ""}"><span><span class="no">${fr(deb + i + 1)}</span>${t.join(" - ")}</span><em>${pct(couponsJ.p[deb + i], couponsJ.p[deb + i] < 0.01 ? 2 : 1)}</em></li>`).join("")}</ul>` +
+      `<div class="f-barre" style="margin:10px 0 0"><div class="f-boutons"><button class="f-bouton" type="button" onclick="changerPage(-1)" ${pageC ? "" : "disabled"}>Précédent</button><span>Page ${pageC + 1} sur ${pages}</span><button class="f-bouton" type="button" onclick="changerPage(1)" ${pageC < pages - 1 ? "" : "disabled"}>Suivant</button></div></div>`;
+  }
+  $("#fd-coupons").innerHTML = `<div class="f-barre"><p class="petit-titre" style="margin:0">${fr(x.coupons)} coupons, du plus probable au moins probable</p><button class="f-bouton" id="fd-copier" type="button" onclick="copierCoupons()">Copier les ${fr(x.coupons)} coupons</button></div>` + corps;
+  $("#trois").innerHTML = [["4+1", "Quinté"], ["quarte", "Quarté"], ["tierce", "Tiercé"]].map(([q, nom]) => `<div class="carte pad"><p class="petit-titre">${nom}${q === F.pari ? " · le pari du jour" : ""}</p>` +
+    (F.trois[q] || []).map(([K, c, m]) => `<div class="trois-l"><span>${fr(K)} coupons · ${fr(m)} F</span><span><b>${pct(c, 1)}</b></span></div>`).join("") + `</div>`).join("");
+}
+
+async function chargerStats() {
+  if (!etat || etat.stats_n == null || statsN === etat.stats_n) return;
+  try { const [a, b] = urlDonnees("stats"); statsJ = await lire(a, b); statsN = etat.stats_n; } catch (e) { console.error(e); }
+  statsVue();
+}
+
+function statsVue() {
+  const S = statsJ, vide = !S || !S.courses;
+  $("#stats-sous").textContent = vide ? "Le suivi commence avec la prochaine course." : `${fr(S.courses)} course${S.courses > 1 ? "s" : ""} suivie${S.courses > 1 ? "s" : ""} depuis novembre 2026`;
+  ["#stats-formules-carte", "#stats-courses-carte"].forEach((x) => { $(x).hidden = vide; });
+  $("#stats-tuiles").hidden = vide;
+  if (vide) return;
+  const tuile = (e, v, s_) => `<div class="tuile"><div class="etiq">${e}</div><div class="val">${v}</div><div class="sous">${s_}</div></div>`;
+  $("#stats-tuiles").innerHTML = tuile("Courses suivies", fr(S.courses), "arrivées officielles") +
+    tuile("Bons chiffres, 10 coupons", S.bons == null ? "—" : virg(S.bons, 1), "meilleur coupon, en moyenne") +
+    tuile("Presque toute l'arrivée", S.presque == null ? "—" : pct(S.presque, 0), "un coupon à un cheval près, ou mieux") +
+    tuile("Gagnant choisi en n° 1", `${fr(S.gagnant_1)} sur ${fr(S.courses)}`, `${fr(S.gagnant_3)} dans les 3 premiers choix`);
+  const nom = {"4+1": "Quinté", quarte: "Quarté", tierce: "Tiercé"};
+  $("#stats-formules").innerHTML = (S.formules || []).map((f) => `<tr><td>${esc(nom[f.pari] || f.pari || "—")}</td><td class="n">${fr(f.K)}</td><td class="n">${fr(f.courses)}</td><td class="n"><b>${fr(f.contenue)}</b> (${f.contenue ? pct(f.contenue / f.courses, 0) : "0 %"})</td><td class="n col-tel">${pct(f.attendu / f.courses, 0)}</td>` +
+    `<td class="n col-tel">${f.journees ? fr(f.mise) + " F" : "—"}</td><td class="n col-tel">${f.journees ? fr(f.gains) + " F" : "—"}</td><td class="n">${f.journees ? virg(f.gains / f.mise, 2) + " F" : "—"}</td></tr>`).join("");
+  $("#stats-courses").innerHTML = (S.lignes || []).map((x) => `<tr><td>${esc((x.date || "").slice(8))}/${esc((x.date || "").slice(5, 7))}</td><td>${esc(x.hippodrome || "")}<span class="ordre col-tel"> · ${esc(x.discipline || "")}</span></td><td>${(x.arrivee || []).join("-")}</td>` +
+    `<td class="n">${x.dix_bons == null ? "—" : `<b>${x.dix_bons}</b> sur ${x.k}`}</td><td class="n">${x.rang ? "n° " + fr(x.rang) : x.liste ? `après ${fr(x.liste)}` : "—"}</td><td class="n col-tel">${x.gagnant_rang ? "n° " + x.gagnant_rang : "—"}</td></tr>`).join("");
 }
 
 function apprend() {
@@ -1199,6 +1319,7 @@ function rendre() {
   $("#demo").hidden = !(etat && etat.demo);
   if (etat && etat.demo) $("#demo").textContent = etat.demo;
   etatDirect();
+  chargerStats();
   if (!etat || etat.vide || !etat.chevaux || !etat.course) {
     $("#titre").textContent = "Le Quinté du jour";
     $("#puces").innerHTML = `<span>${esc(etat && etat.vide ? etat.vide : "Pas encore de données.")}</span>`;
