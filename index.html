@@ -479,7 +479,7 @@ footer { max-width:1240px; margin:0 auto; padding:18px 20px 90px; color:var(--te
 
   <div class="vue" data-vue="coupons" id="vue-coupons" hidden>
 <section id="lot-section" hidden>
-    <div class="tete-section"><h2>Les 10 coupons les plus probables</h2><p>Sur le pari du jour, du plus probable au moins probable. Le premier est le ticket du lab.</p></div>
+    <div class="tete-section"><h2>Les 10 coupons du jour</h2><p>Le ticket du lab, puis 9 coupons choisis dans le lot pour attraper le plus de bons chiffres.</p></div>
     <div class="lots" id="lots"></div>
     <p class="note" id="lots-note"></p>
   </section>
@@ -1058,18 +1058,20 @@ function lots() {
   const D = etat.dix, juge = (etat.comparaison || {}).dix;
   $("#lot-section").hidden = !D;
   if (!D) return;
-  const sort = (i) => { const j = juge && juge[i]; return !j ? null : j === "non" ? "perdu" : j === "bonus" ? "bonus" : "gagné, " + j; };
-  const n = D.coupons.length, perte = D.retour === null ? null : D.total - D.retour;
-  $("#lots").innerHTML = `<div class="carte pad"><p class="petit-titre">${esc(D.libelle)} : les ${n} coupons</p>` +
+  const sort = (i) => { const j = juge && juge[i]; return !j ? null : j === "ordre" || j === "désordre" ? "gagné, " + j : j; };
+  const n = D.coupons.length, perte = D.retour == null ? null : D.total - D.retour, S = etat.dix_suivi;
+  $("#lots").innerHTML = `<div class="carte pad"><p class="petit-titre">${esc(D.libelle)} : le lot de ${D.N} chevaux</p>` +
+    `<div class="lot-nums">${D.lot.map((x) => `<span class="numero">${x}</span>`).join("")}</div>` +
     `<ul class="lot-coupons">${D.coupons.map((c, i) => `<li><span>${c.t.join(" - ")}${i ? "" : `<em class="lab">ticket du lab</em>`}</span><em>${sort(i) || `${pct(c.p, c.p < 0.01 ? 2 : 1)} · 1 sur ${fr(Math.round(c.un_sur))}`}</em></li>`).join("")}</ul>` +
     `<dl class="dix-bilan"><div><dt>Mise totale</dt><dd>${fr(D.total)} F</dd><small>${n} coupons à ${fr(D.mise)} F</small></div>` +
-    `<div><dt>Chance qu'un coupon passe</dt><dd>${pct(D.chance, 1)}</dd><small>soit 1 jour sur ${fr(Math.round(1 / D.chance))}</small></div>` +
+    `<div><dt>Arrivée exacte dans les ${n}</dt><dd>${pct(D.chance, 1)}</dd><small>soit 1 jour sur ${fr(Math.round(1 / D.chance))}</small></div>` +
     (perte === null ? `<div><dt>Espérance de gain</dt><dd>—</dd><small>trop peu de journées mesurées</small></div>`
       : `<div><dt>Espérance de gain</dt><dd>−${fr(perte)} F</dd><small>${fr(D.retour)} F reviennent en moyenne</small></div>`) + `</dl>` +
-    (D.R === null || D.R === undefined ? "" : `<p class="lot-chiffres">Mesuré sur <b>${fr(D.journees)} journées</b> de 2022 à 2026, avec les vrais rapports : ces ${n} coupons ont rendu <b>${virg(D.R, 2)} F pour 1 F</b> (entre ${virg(D.ic[0], 2)} et ${virg(D.ic[1], 2)}). ` +
-      `Une journée sur ${fr(Math.round(1 / D.part_gain))}, au moins un coupon paie : ${fr(D.gain_median)} F en médiane, pour ${fr(D.total)} F misés.</p>`) +
-    (etat.dix_suivi ? `<p class="lot-chiffres">Suivi réel depuis novembre, sur le papier : <b>${fr(etat.dix_suivi.courses)} journée${etat.dix_suivi.courses > 1 ? "s" : ""}</b>, ${fr(etat.dix_suivi.gains)} F rendus pour ${fr(etat.dix_suivi.mise)} F misés.</p>` : "") + `</div>`;
-  $("#lots-note").textContent = "L'espérance est une moyenne mesurée sur le passé : les rapports du jour ne sont connus qu'après la course. Les coupons les plus probables paient moins que les autres : aucun lot testé par le lab ne rend sa mise.";
+    (D.courses ? `<p class="lot-chiffres">Mesuré sur <b>${fr(D.courses)} courses</b> de 2022 à 2026, tous types de course : le meilleur coupon a eu <b>${virg(D.bons, 1)} bons chiffres sur ${D.k}</b> en moyenne, ` +
+      `${D.k - 1} bons ou plus dans ${pct(D.presque, 0)} des courses, et l'arrivée exacte dans ${pct(D.exact, 1)}. Les ${n} coupons ont contenu ${virg(D.couverts, 1)} chevaux de l'arrivée sur ${D.k}.</p>` : "") +
+    (D.R == null ? "" : `<p class="lot-chiffres">Rendement réel sur ${fr(D.journees)} journées : <b>${virg(D.R, 2)} F pour 1 F</b>, et ${virg(D.R_sans_ordre, 2)} F sans les gros lots de l'ordre exact.</p>`) +
+    (S ? `<p class="lot-chiffres">Suivi réel depuis novembre, sur le papier : <b>${fr(S.courses)} journée${S.courses > 1 ? "s" : ""}</b>${S.bons != null ? `, ${virg(S.bons, 1)} bons chiffres en moyenne` : ""}, ${fr(S.gains)} F rendus pour ${fr(S.mise)} F misés.</p>` : "") + `</div>`;
+  $("#lots-note").textContent = "L'espérance est une moyenne mesurée sur le passé : les rapports du jour ne sont connus qu'après la course. Attraper plus de bons chiffres ne veut pas dire gagner plus : aucun lot testé par le lab ne rend sa mise.";
 }
 
 function apprend() {
